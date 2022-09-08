@@ -51,11 +51,7 @@ with column_c:
     st.subheader("Artigos excluídos")
     st.markdown(f"{len(dashboard_data[dashboard_data['excluded']==True])}")
 
-st.markdown("""
-
-
-
-""")
+st.markdown("""***""")
 
 st.markdown("**Status para avaliação de título e abstract de cada revisor**")
 
