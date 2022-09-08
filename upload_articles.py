@@ -68,7 +68,7 @@ def upload_articles_data(search_strategy: str, articles_df=articles_df, firestor
     for index, article in tqdm(articles_df[['pubmed_id']].iterrows()):
       doc_ref = firestore_client.collection("articles_first_review").document(reviewer).collection("articles").document(str(article['pubmed_id']))
       doc_ref.set({column_name : str(data) for column_name, data in article.iteritems()})
-      doc_ref.set({"included": False, "excluded": False})
+      doc_ref.update({"included": False, "excluded": False})
 
   #Saving related search strategy:
   query = firestore_client.collection("search_strategies").get()
