@@ -59,7 +59,7 @@ def get_user_review_progress(user):
 
 reviewers_data = {}
 for reviewer in reviewers:
-  reviewers[reviewer] = {"progress_bar": st.progress(0)}
+  reviewers_data[reviewer] = {"progress_bar": st.progress(0)}
   st.write(reviewer)
-  reviewers[reviewer]["progress_bar"].progress(get_user_review_progress(reviewer))
+  reviewers_data[reviewer]["progress_bar"].progress(get_user_review_progress(reviewer))
 
