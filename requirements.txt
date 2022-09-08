@@ -5,3 +5,4 @@ google-cloud-firestore
 uuid
 datetime
 spacy
+nbib
