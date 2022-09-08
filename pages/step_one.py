@@ -3,39 +3,35 @@ import nbib
 import pandas as pd
 import uuid
 
+#Custom imports
+import main
+
+
+
+
+
 st.title("Passo 1: Revisão títulos e resumos")
 #st.header("Revisão títulos e resumos ")
 
-filepath = "/Users/viniciusanjosdealmeida/review_pomr_ehr/articles.nbib"
 
-articles_data = nbib.read_file(filepath)
-# articles_data is a list of dictionaries with articles data
-# those dictionaries keys can include the following: 
-    # {'grants', 'journal_abbreviated', 'authors', 'publication_status', 'pubmed_id', 
-    #  'descriptors', 'electronic_issn', 'place_of_publication', 'print_issn', 'linking_issn', 
-    #  'publication_date', 'corporate_author', 'pii', 'transliterated_title', 'abstract', 
-    #  'nlm_journal_id', 'pubmed_time', 'accepted_time', 'journal_issue', 'pages', 'medline_time',
-    #  'entrez_time', 'doi', 'pmcid', 'citation_owner', 'conflict_of_interest', 'journal', 
-    #  'keywords', 'nlm_status', 'title', 'copyright', 'revised_time', 'received_time', 'journal_volume', 
-    #  'language', 'electronic_publication_date', 'last_revision_date', 'publication_types'}
 
-def get_article_keys(articles_data): # articles_data is a list of dictionaries with articles data
-    keys = []
-    for article in articles_data:
-        keys.extend(list(article.keys()))
-    keys = set(keys)
-    return keys # returns a list of unique keys that are present at least once in articles_data
+dashboard_data = main.get_dashboard_data()
+not_reviewed_articles = dashboard_data[dashboard_data['excluded']==0 & dashboard_data["included"]==0]
+current_article_pmid = not_reviewed_articles[0]['pubmed_id']
 
-articles_df = pd.DataFrame.from_records(articles_data) 
-articles_df["included"] = 0
-articles_df = articles_df.astype(str)
-# st.dataframe(data=articles_df[articles_df["included"] != 1])
-# print(articles_df.info())
+def get_current_article_data(article_pmid):
+    query = main.firestore_client.collection("articles_simplified").document(article_pmid).get()
+    filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
+    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
+    return filtered_collection_dataframe
 
-articles_reviewed = articles_df[articles_df["included"] != 1].to_dict('records')
-st.subheader(articles_reviewed[0]['title'])
-st.write(articles_reviewed[0]['abstract'])
-st.write(f"https://pubmed.ncbi.nlm.nih.gov/{articles_reviewed[0]['pubmed_id']}/")
+current_article_data = get_current_article_data(current_article_pmid)
+
+
+
+st.subheader(current_article_data['title'])
+st.write(current_article_data['abstract'])
+st.write(f"https://pubmed.ncbi.nlm.nih.gov/{current_article_data['pubmed_id']}/")
 
 
 column_a, column_b = st.columns(2)
@@ -107,12 +103,15 @@ def local_css(file_name):
 local_css('style.css')
 
 
-# def header(content):
-#      st.markdown(f'<p style="background-color:#ffffff;color:#33ff33;font-size:24px;border-radius:2%;position: fixed;top: 0;width: 100%">{content}</p>', unsafe_allow_html=True)
-# header("Olá, Mundo!")
+
+#Designing the sidebar
+n_reviewed_articles = len(dashboard_data[(dashboard_data['included']==1) | (dashboard_data['excluded']==1)])
+n_all_articles = len(dashboard_data)
 
 with st.sidebar:
-    st.write("""**Artigos incluídos**: 17""")    
-    st.markdown("""**Artigos excluídos**: 32""")
-    st.markdown("""**Artigos não avaliados**: 100""")
+    st.write(f"""**Artigos incluídos**: {len(dashboard_data[(dashboard_data['included']==1)])}""")    
+    st.markdown(f"""**Artigos excluídos**: {len(dashboard_data[(dashboard_data['excluded']==1)])}""")
+    st.markdown(f"""**Artigos não avaliados**: {n_all_articles - n_reviewed_articles}""")
+
+
 

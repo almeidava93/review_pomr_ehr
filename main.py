@@ -55,7 +55,7 @@ st.markdown("""***""")
 
 st.markdown("**Progresso da revisão - primeira etapa**")
 
-def get_user_review_progress(user):
+def get_user_review_progress(user=st.experimental_user.email):
   dashboard_data = get_dashboard_data(user)
   return dashboard_data
 
