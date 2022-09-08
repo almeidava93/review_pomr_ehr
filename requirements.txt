@@ -1,1 +1,7 @@
-google.cloud
+unidecode
+rank_bm25
+streamlit
+google-cloud-firestore
+uuid
+datetime
+spacy
