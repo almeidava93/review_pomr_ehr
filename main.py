@@ -26,7 +26,7 @@ st.title("Dashboard de referências")
 column_a, column_b, column_c = st.columns(3)
 
 def get_dashboard_data():
-  query = firestore_client.collection("articles_first_review").document("st.experimental_user").collection("articles").get()
+  query = firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").get()
   filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
   filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
   return filtered_collection_dataframe
