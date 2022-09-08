@@ -45,8 +45,6 @@ articles_data = nbib.read_file(filepath)
     #  'language', 'electronic_publication_date', 'last_revision_date', 'publication_types'}
 
 articles_df = pd.DataFrame.from_records(articles_data) 
-print(articles_df.info())
-
 
 def upload_articles_data(search_strategy: str, articles_df=articles_df, firestore_client=firestore_client):
   #Collection with articles full data:
@@ -57,6 +55,11 @@ def upload_articles_data(search_strategy: str, articles_df=articles_df, firestor
   #Collection with articles simplified data:
   for index, article in tqdm(articles_df[['pubmed_id', 'title', 'abstract']].iterrows()):
     doc_ref = firestore_client.collection("articles_simplified").document(str(article['pubmed_id']))
+    doc_ref.set({column_name : str(data) for column_name, data in article.iteritems()})
+
+  #Collection for first articles review data:
+  for index, article in tqdm(articles_df[['pubmed_id']].iterrows()):
+    doc_ref = firestore_client.collection("articles_first_review").document(str(article['pubmed_id']))
     doc_ref.set({column_name : str(data) for column_name, data in article.iteritems()})
 
   #Saving related search strategy:
