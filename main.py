@@ -53,7 +53,7 @@ with column_c:
 
 st.markdown("""***""")
 
-st.markdown("**Status para avaliação de título e abstract de cada revisor**")
+st.markdown("**Progresso da revisão - primeira etapa**")
 
 def get_user_review_progress(user):
   dashboard_data = get_dashboard_data(user)
