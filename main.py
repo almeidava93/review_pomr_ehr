@@ -8,7 +8,7 @@ import streamlit as st
 from google.cloud import firestore
 import json
 
-database_keys = open("/Users/viniciusanjosdealmeida/review_pomr_ehr/pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
+database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.loads(database_keys)
 
 
