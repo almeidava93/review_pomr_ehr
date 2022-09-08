@@ -55,7 +55,7 @@ st.header("Status para avaliação de título e abstract de cada revisor")
 
 def get_user_review_progress(user):
   dashboard_data = get_dashboard_data(user)
-  return len(dashboard_data[dashboard_data['included']==True or dashboard_data['excluded']==True])/len(dashboard_data)
+  return len(dashboard_data[dashboard_data['included']==True | dashboard_data['excluded']==True])/len(dashboard_data)
 
 reviewers_data = {}
 for reviewer in reviewers:
