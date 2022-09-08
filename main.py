@@ -57,11 +57,18 @@ st.markdown("**Progresso da revisão - primeira etapa**")
 
 def get_user_review_progress(user):
   dashboard_data = get_dashboard_data(user)
-  return len(dashboard_data[(dashboard_data['included']==1) | (dashboard_data['excluded']==1)])/len(dashboard_data)
+  return dashboard_data
 
 reviewers_data = {}
 for reviewer in reviewers:
   st.write(reviewer)
   reviewers_data[reviewer] = {"progress_bar": st.progress(0)}
-  reviewers_data[reviewer]["progress_bar"].progress(get_user_review_progress(reviewer))
+  dashboard_data = get_user_review_progress(reviewer)
+  n_reviewed_articles = len(dashboard_data[(dashboard_data['included']==1) | (dashboard_data['excluded']==1)])
+  n_all_articles = len(dashboard_data)
+  progress = n_reviewed_articles/n_all_articles
+  reviewers_data[reviewer]["progress_bar"].progress(progress)
+  st.write(f"De um total de {n_all_articles} artigos, {n_reviewed_articles} foram revisados nesta primeira fase e {n_all_articles - n_reviewed_articles} estão pendentes.")
+  st.write("")
+
 
