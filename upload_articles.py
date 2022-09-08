@@ -52,6 +52,16 @@ reviewers = [
   "mariela204@gmail.com"
 ]
 
+def update_reviewers_data():
+  reviewers = [
+    "almeida.va93@gmail.com",
+    "henrique.t.arai@gmail.com",
+    "mariela204@gmail.com"
+  ]
+  for reviewer in reviewers:
+    doc_ref = firestore_client.collection("reviewers").document(reviewer)
+    doc_ref.set({"email": reviewer})
+
 def upload_articles_data(search_strategy: str, articles_df=articles_df, firestore_client=firestore_client):
   #Collection with articles full data:
   for index, article in tqdm(articles_df.iterrows()):
@@ -77,3 +87,4 @@ def upload_articles_data(search_strategy: str, articles_df=articles_df, firestor
 
 search_strategy = '("problem-oriented medical record" OR "problem-oriented record" OR "problem-oriented patient record" OR "episode of care" OR "problems list" OR "problem-oriented" OR "SOAP" OR "APSO") AND ("electronic patient record" OR "EPR" OR "electronic health record" OR "electronic health records" OR "EHR" OR "electronic medical record" OR "electronic medical records" OR "EMR" OR "electronic records" OR "electronic patient record" OR "electronic patient records")'
 upload_articles_data(search_strategy)
+update_reviewers_data()
