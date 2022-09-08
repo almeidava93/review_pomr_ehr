@@ -46,6 +46,12 @@ articles_data = nbib.read_file(filepath)
 
 articles_df = pd.DataFrame.from_records(articles_data) 
 
+reviewers = [
+  "almeida.va93@gmail.com",
+  "henrique.t.arai@gmail.com",
+  "mariela204@gmail.com"
+]
+
 def upload_articles_data(search_strategy: str, articles_df=articles_df, firestore_client=firestore_client):
   #Collection with articles full data:
   for index, article in tqdm(articles_df.iterrows()):
@@ -58,9 +64,11 @@ def upload_articles_data(search_strategy: str, articles_df=articles_df, firestor
     doc_ref.set({column_name : str(data) for column_name, data in article.iteritems()})
 
   #Collection for first articles review data:
-  for index, article in tqdm(articles_df[['pubmed_id']].iterrows()):
-    doc_ref = firestore_client.collection("articles_first_review").document(str(article['pubmed_id']))
-    doc_ref.set({column_name : str(data) for column_name, data in article.iteritems()})
+  for reviewer in reviewers:
+    for index, article in tqdm(articles_df[['pubmed_id']].iterrows()):
+      doc_ref = firestore_client.collection("articles_first_review").document(reviewer).collection("articles").document(str(article['pubmed_id']))
+      doc_ref.set({column_name : str(data) for column_name, data in article.iteritems()})
+      doc_ref.set({"included": False, "excluded": False})
 
   #Saving related search strategy:
   query = firestore_client.collection("search_strategies").get()
