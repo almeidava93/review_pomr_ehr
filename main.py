@@ -7,6 +7,10 @@ from google.cloud import firestore
 import json
 import pandas as pd
 
+#Custom import
+from upload_articles import reviewers
+
+
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.load(database_keys)
 
@@ -25,14 +29,13 @@ st.title("Dashboard de referências")
 
 column_a, column_b, column_c = st.columns(3)
 
-def get_dashboard_data():
-  query = firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").get()
+def get_dashboard_data(user=st.experimental_user.email):
+  query = firestore_client.collection("articles_first_review").document(user).collection("articles").get()
   filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
   filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
   return filtered_collection_dataframe
 
 dashboard_data = get_dashboard_data()
-st.write(dashboard_data)
 
 with column_a:
     st.subheader("Total de artigos")
@@ -45,3 +48,16 @@ with column_b:
 with column_c:
     st.subheader("Artigos excluídos")
     st.markdown(f"{len(dashboard_data[dashboard_data['excluded']==True])}")
+
+st.header("Status para avaliação de título e abstract de cada revisor")
+
+def get_user_review_progress(user):
+  dashboard_data = get_dashboard_data(user)
+  return len(dashboard_data[dashboard_data['included']==True or dashboard_data['excluded']==True])/len(dashboard_data)
+
+reviewers_data = {}
+for reviewer in reviewers:
+  reviewers[reviewer] = {"progress_bar": st.progress(0)}
+  st.write(reviewer)
+  reviewers[reviewer]["progress_bar"].progress(get_user_review_progress(reviewer))
+
