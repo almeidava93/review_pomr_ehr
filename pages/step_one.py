@@ -17,7 +17,7 @@ st.title("Passo 1: Revisão títulos e resumos")
 
 dashboard_data = main.get_dashboard_data()
 not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
-current_article_pmid = not_reviewed_articles[0]['pubmed_id']
+current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
 
 def get_current_article_data(article_pmid):
     query = main.firestore_client.collection("articles_simplified").document(article_pmid).get()
