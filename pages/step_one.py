@@ -29,10 +29,12 @@ current_article_data = get_current_article_data(current_article_pmid)
 
 
 
-st.subheader(current_article_data['title'])
-st.write(current_article_data['abstract'])
-st.write(f"https://pubmed.ncbi.nlm.nih.gov/{current_article_data['pubmed_id']}/")
+st.subheader(str(current_article_data['title']))
+st.write(str(current_article_data['abstract']))
+st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data['pubmed_id'])}/")
 
+
+st.markdown("***")
 
 column_a, column_b = st.columns(2)
 
