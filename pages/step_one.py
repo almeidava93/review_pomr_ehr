@@ -102,6 +102,12 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
+        
+        #Reseting widgets
+        for key in inclusion_criteria: del st.session_state[key]
+        for key in exclusion_criteria: del st.session_state[key]
+
+        #Reloading page
         st.experimental_rerun()
 
 if excluded:
