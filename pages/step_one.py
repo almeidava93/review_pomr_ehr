@@ -82,10 +82,10 @@ with column_a:
 with column_b:
     included = st.button("Incluir", key="bt_included", help=None, on_click=None, args=None, kwargs=None)
 
-
 if len(selected_inclusion_criteria) > 0 and len(selected_exclusion_criteria) > 0:
     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
     st.error(error_message)
+
 
 
 if included:
@@ -102,20 +102,30 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
-        
-        #Reseting widgets
-        for checkbox in inclusion_checkboxes: checkbox = False
-        for checkbox in exclusion_checkboxes: checkbox = False
 
         #Reloading page
         st.experimental_rerun()
 
+
+
 if excluded:
     if len(selected_exclusion_criteria) == 0:
-        exclusion_error_message = "Para **excluir** este artigo, selecione ao menos um dos critérios de inclusão."
+        exclusion_error_message = "Para **excluir** este artigo, selecione ao menos um dos critérios de exclusão."
         st.error(exclusion_error_message)
     else:
+        doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
+        doc_ref.update(
+            {
+                "included": False,
+                "excluded": True,
+                "exclusion_criteria": selected_exclusion_criteria
+            }
+        )
         st.success("O artigo foi **excluído** com sucesso da revisão.")
+
+        #Reloading page
+        st.experimental_rerun()
+
 
 
 #STYLING
