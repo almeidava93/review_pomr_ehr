@@ -104,8 +104,8 @@ if included:
         st.success("O artigo foi **incluído** com sucesso na revisão.")
         
         #Reseting widgets
-        for key in inclusion_criteria: del st.session_state[key]
-        for key in exclusion_criteria: del st.session_state[key]
+        for checkbox in inclusion_checkboxes: checkbox = False
+        for checkbox in exclusion_checkboxes: checkbox = False
 
         #Reloading page
         st.experimental_rerun()
