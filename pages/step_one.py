@@ -102,6 +102,7 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
+        st.experimental_rerun()
 
 if excluded:
     if len(selected_exclusion_criteria) == 0:
