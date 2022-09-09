@@ -48,7 +48,7 @@ with column_a:
     exclusion_criteria = ["Outra língua que não português ou inglês", 
                             "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico", 
                             "Não tem como objetivo estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
-    exclusion_checkboxes = [st.checkbox(x) for x in exclusion_criteria]
+    exclusion_checkboxes = [st.checkbox(x, key=x) for x in exclusion_criteria]
     # st.write(exclusion_checkboxes)
     indices = [i for i, x in enumerate(exclusion_checkboxes) if x == True]
     selected_exclusion_criteria = [exclusion_criteria[i] for i in indices]
@@ -61,7 +61,7 @@ with column_b:
                        "Estudo de impactos do uso do RCOP para o paciente", 
                        "Estudo de impactos do uso do RCOP para o profissional de saúde",
                        "Não foi possível avaliar"]
-    inclusion_checkboxes = [st.checkbox(x) for x in inclusion_criteria]
+    inclusion_checkboxes = [st.checkbox(x, key=x) for x in inclusion_criteria]
     # st.write(inclusion_checkboxes)
     indices = [i for i, x in enumerate(inclusion_checkboxes) if x == True]
     selected_inclusion_criteria = [inclusion_criteria[i] for i in indices]
