@@ -22,7 +22,7 @@ current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
 def get_current_article_data(article_pmid):
     query = main.firestore_client.collection("articles_simplified").document(article_pmid).get()
     filtered_collection_dict = query.to_dict()#Returns list of dictionaries 
-    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
+    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict, index=[0]) #Returns dataframe
     return filtered_collection_dataframe
 
 current_article_data = get_current_article_data(current_article_pmid)
