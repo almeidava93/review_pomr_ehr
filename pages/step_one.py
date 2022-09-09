@@ -93,6 +93,14 @@ if included:
         inclusion_error_message = "Para **incluir** este artigo, selecione ao menos um dos critérios de inclusão."
         st.error(inclusion_error_message)
     else:
+        doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
+        doc_ref.update(
+            {
+                "included": True,
+                "excluded": False,
+                "inclusion_criteria": selected_inclusion_criteria
+            }
+        )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
 
 if excluded:
@@ -117,9 +125,9 @@ n_reviewed_articles = len(dashboard_data[(dashboard_data['included']==1) | (dash
 n_all_articles = len(dashboard_data)
 
 with st.sidebar:
+    st.markdown(f"""**Artigos não avaliados**: {n_all_articles - n_reviewed_articles}""")
     st.write(f"""**Artigos incluídos**: {len(dashboard_data[(dashboard_data['included']==1)])}""")    
     st.markdown(f"""**Artigos excluídos**: {len(dashboard_data[(dashboard_data['excluded']==1)])}""")
-    st.markdown(f"""**Artigos não avaliados**: {n_all_articles - n_reviewed_articles}""")
 
 
 
