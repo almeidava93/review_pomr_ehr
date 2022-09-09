@@ -30,7 +30,12 @@ current_article_data = get_current_article_data(current_article_pmid)
 
 
 st.subheader(str(current_article_data.at[0,'title']))
-st.write(str(current_article_data.at[0,'abstract']))
+
+if str(current_article_data.at[0,'abstract']) != 'nan':
+    st.write(str(current_article_data.at[0,'abstract']))
+else:
+    st.markdown("*Este artigo não tem resumo disponível...*")
+
 st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data.at[0,'pubmed_id'])}/")
 
 
@@ -54,7 +59,8 @@ with column_b:
     st.markdown("**Critérios de inclusão**")
     inclusion_criteria = ["Alguma aplicação do RCOP em um prontuário eletrônico (p.e., organizar lista de problemas, episódios de cuidado, SOAP ou outras maneiras de registro orientado por problemas)", 
                        "Estudo de impactos do uso do RCOP para o paciente", 
-                       "Estudo de impactos do uso do RCOP para o profissional de saúde"]
+                       "Estudo de impactos do uso do RCOP para o profissional de saúde",
+                       "Não foi possível avaliar"]
     inclusion_checkboxes = [st.checkbox(x) for x in inclusion_criteria]
     # st.write(inclusion_checkboxes)
     indices = [i for i, x in enumerate(inclusion_checkboxes) if x == True]
