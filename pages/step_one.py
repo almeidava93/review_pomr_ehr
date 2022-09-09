@@ -29,9 +29,9 @@ current_article_data = get_current_article_data(current_article_pmid)
 
 
 
-st.subheader(str(current_article_data['title']))
-st.write(str(current_article_data['abstract']))
-st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data['pubmed_id'])}/")
+st.subheader(str(current_article_data.at[0,'title']))
+st.write(str(current_article_data.at[0,'abstract']))
+st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data.at[0,'pubmed_id'])}/")
 
 
 st.markdown("***")
