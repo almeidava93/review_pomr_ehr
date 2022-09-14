@@ -2,18 +2,13 @@ import streamlit as st
 import nbib
 import pandas as pd
 import uuid
+import time
 
 #Custom imports
 import main
 
 
-
-
-
 st.title("Passo 1: Revisão títulos e resumos")
-#st.header("Revisão títulos e resumos ")
-
-
 
 dashboard_data = main.get_dashboard_data()
 not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
@@ -102,7 +97,8 @@ if included:
             {
                 "included": True,
                 "excluded": False,
-                "inclusion_criteria": selected_inclusion_criteria
+                "inclusion_criteria": selected_inclusion_criteria,
+                "timestamp": time.time()
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
@@ -128,7 +124,8 @@ if excluded:
             {
                 "included": False,
                 "excluded": True,
-                "exclusion_criteria": selected_exclusion_criteria
+                "exclusion_criteria": selected_exclusion_criteria,
+                "timestamp": time.time()
             }
         )
         st.success("O artigo foi **excluído** com sucesso da revisão.")
