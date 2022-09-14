@@ -46,8 +46,7 @@ column_a, column_b = st.columns(2)
 with column_a:
     st.markdown("**Critérios de exclusão**")
     exclusion_criteria = ["Outra língua que não português ou inglês", 
-                            "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico", 
-                            "Não tem como objetivo estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
+                            "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico ou de estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
     exclusion_checkboxes = [st.checkbox(x, key=x) for x in exclusion_criteria]
     # st.write(exclusion_checkboxes)
     indices = [i for i, x in enumerate(exclusion_checkboxes) if x == True]
@@ -92,6 +91,11 @@ if included:
     if len(selected_inclusion_criteria) == 0:
         inclusion_error_message = "Para **incluir** este artigo, selecione ao menos um dos critérios de inclusão."
         st.error(inclusion_error_message)
+
+    elif len(selected_inclusion_criteria) > 0 and len(selected_exclusion_criteria) > 0:
+        error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
+        st.error(error_message)
+
     else:
         doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
         doc_ref.update(
@@ -112,6 +116,12 @@ if excluded:
     if len(selected_exclusion_criteria) == 0:
         exclusion_error_message = "Para **excluir** este artigo, selecione ao menos um dos critérios de exclusão."
         st.error(exclusion_error_message)
+
+
+    elif len(selected_inclusion_criteria) > 0 and len(selected_exclusion_criteria) > 0:
+        error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
+        st.error(error_message)
+
     else:
         doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
         doc_ref.update(
