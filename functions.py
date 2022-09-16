@@ -75,7 +75,8 @@ def upload_articles_data(search_strategy: str, articles_df: pd.DataFrame, firest
   doc_ref = firestore_client.collection("search_strategies").document(f"search_strategy_{len(query)+1}")
   doc_ref.set({"search_strategy": search_strategy})
 
-  def add_new_articles(file, search_strategy):
+
+def add_new_articles(file, search_strategy):
     #Load current database articles
     query = firestore_client.collection("articles_simplified").get()
     data = [doc.to_dict() for doc in query]
@@ -95,9 +96,9 @@ def upload_articles_data(search_strategy: str, articles_df: pd.DataFrame, firest
 
 
 
-from main import firestore_client
+# from main import firestore_client
 
-query = firestore_client.collection("articles_simplified").get()
-data = [doc.to_dict() for doc in query]
-df1 = pd.DataFrame.from_records(data)
-print(df1.info())
+# query = firestore_client.collection("articles_simplified").get()
+# data = [doc.to_dict() for doc in query]
+# df1 = pd.DataFrame.from_records(data)
+# print(df1.info())
