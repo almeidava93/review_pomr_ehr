@@ -47,6 +47,11 @@ with column_a:
     st.markdown("**Critérios de exclusão**")
     exclusion_criteria = ["Outra língua que não português ou inglês", 
                             "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico ou de estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
+    
+    for key in exclusion_criteria:
+        if key not in st.session_state:
+            st.session_state[key] = False
+
     exclusion_checkboxes = [st.checkbox(x, key=x) for x in exclusion_criteria]
     # st.write(exclusion_checkboxes)
     indices = [i for i, x in enumerate(exclusion_checkboxes) if x == True]
@@ -60,6 +65,11 @@ with column_b:
                        "Estudo de impactos do uso do RCOP para o paciente", 
                        "Estudo de impactos do uso do RCOP para o profissional de saúde",
                        "Não foi possível avaliar"]
+    
+    for key in inclusion_criteria:
+        if key not in st.session_state:
+            st.session_state[key] = False
+    
     inclusion_checkboxes = [st.checkbox(x, key=x) for x in inclusion_criteria]
     # st.write(inclusion_checkboxes)
     indices = [i for i, x in enumerate(inclusion_checkboxes) if x == True]
