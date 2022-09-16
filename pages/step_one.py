@@ -47,10 +47,6 @@ with column_a:
     st.markdown("**Critérios de exclusão**")
     exclusion_criteria = ["Outra língua que não português ou inglês", 
                             "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico ou de estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
-    
-    for key in exclusion_criteria:
-        if key not in st.session_state:
-            st.session_state[key] = False
 
     exclusion_checkboxes = [st.checkbox(x, key=x) for x in exclusion_criteria]
     # st.write(exclusion_checkboxes)
@@ -65,10 +61,6 @@ with column_b:
                        "Estudo de impactos do uso do RCOP para o paciente", 
                        "Estudo de impactos do uso do RCOP para o profissional de saúde",
                        "Não foi possível avaliar"]
-    
-    for key in inclusion_criteria:
-        if key not in st.session_state:
-            st.session_state[key] = False
     
     inclusion_checkboxes = [st.checkbox(x, key=x) for x in inclusion_criteria]
     # st.write(inclusion_checkboxes)
@@ -86,10 +78,10 @@ with column_b:
 column_a, column_b = st.columns(2)
 
 with column_a:
-    excluded = st.button("Excluir", key="bt_excluded", help=None, on_click=None, args=None, kwargs=None)
+    excluded = st.button("Excluir", key="bt_excluded", help=None, on_click=functions.reset_inputs, args=exclusion_criteria, kwargs=None)
 
 with column_b:
-    included = st.button("Incluir", key="bt_included", help=None, on_click=None, args=None, kwargs=None)
+    included = st.button("Incluir", key="bt_included", help=None, on_click=functions.reset_inputs, args=inclusion_criteria, kwargs=None)
 
 if len(selected_inclusion_criteria) > 0 and len(selected_exclusion_criteria) > 0:
     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
