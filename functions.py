@@ -103,9 +103,7 @@ def reset_inputs():
     resetInputs = function () {
     fields = document.getElementsByTagName('input');
     for (var i = 0; i < fields.length; ++i) {
-        if(fields[i].checked = true) {
-            fields[i].checked = false;
-      }
+        getElementById(fields[i].id).reset();
     }
     resetInputs()
   </script>
