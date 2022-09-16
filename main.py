@@ -31,6 +31,8 @@ st.title("Dashboard de referências")
 
 st.write(f"Você logou como: {st.experimental_user.email}")
 
+st.markdown("""***""")
+
 column_a, column_b, column_c = st.columns(3)
 
 def get_dashboard_data(user=st.experimental_user.email):
