@@ -29,6 +29,9 @@ firestore_client = load_firestore_client() #Loads cached database connection
 #Page rendering
 st.title("Dashboard de referências")
 
+st.write("Você logou como:")
+st.write(st.experimental_user.email)
+
 column_a, column_b, column_c = st.columns(3)
 
 def get_dashboard_data(user=st.experimental_user.email):
