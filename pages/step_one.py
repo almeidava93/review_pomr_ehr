@@ -10,6 +10,10 @@ import main
 
 st.title("Passo 1: Revisão títulos e resumos")
 
+st.write(f"Você logou como: {st.experimental_user.email}")
+
+st.markdown("""***""")
+
 dashboard_data = main.get_dashboard_data()
 not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
 current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
