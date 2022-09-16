@@ -97,14 +97,5 @@ def add_new_articles(file, search_strategy):
 
 
 #Reseting page's input elements
-def reset_inputs():
-  components.html("""
-  <script>
-    resetInputs = function () {
-    fields = document.getElementsByTagName('input');
-    for (var i = 0; i < fields.length; ++i) {
-        getElementById(fields[i].id).reset();
-    }
-    resetInputs()
-  </script>
-  """)
+def reset_inputs(keys: list):
+    for key in keys: st.session_state[key] = False

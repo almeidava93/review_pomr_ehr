@@ -107,7 +107,7 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
-        functions.reset_inputs()
+        functions.reset_inputs(inclusion_criteria)
 
         #Reloading page
         st.experimental_rerun()
@@ -135,7 +135,7 @@ if excluded:
             }
         )
         st.success("O artigo foi **excluído** com sucesso da revisão.")
-        functions.reset_inputs()
+        functions.reset_inputs(exclusion_criteria)
 
         #Reloading page
         st.experimental_rerun()
