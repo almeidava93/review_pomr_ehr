@@ -30,17 +30,5 @@ else:
         
         if add_articles_button and file is not None:                            
             functions.add_new_articles(file, search_strategy)
-            
-            
-            articles_data = nbib.read_file(file)
-            articles_df = pd.DataFrame.from_records(articles_data) 
-
-            query = firestore_client.collection("articles_simplified").get()
-            data = [doc.to_dict() for doc in query]
-            df1 = pd.DataFrame.from_records(data)
-            print(df1.info())
-
-
-
 
         pass

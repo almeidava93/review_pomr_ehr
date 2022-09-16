@@ -6,6 +6,7 @@ import time
 
 #Custom imports
 import main
+import functions
 
 
 st.title("Passo 1: Revisão títulos e resumos")
@@ -106,6 +107,7 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
+        functions.reset_inputs()
 
         #Reloading page
         st.experimental_rerun()
@@ -133,6 +135,7 @@ if excluded:
             }
         )
         st.success("O artigo foi **excluído** com sucesso da revisão.")
+        functions.reset_inputs()
 
         #Reloading page
         st.experimental_rerun()

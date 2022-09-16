@@ -3,6 +3,7 @@
 
 
 import streamlit as st
+import streamlit.components.v1 as components
 from google.cloud import firestore
 import json
 import nbib
@@ -95,10 +96,10 @@ def add_new_articles(file, search_strategy):
     pass
 
 
-
-# from main import firestore_client
-
-# query = firestore_client.collection("articles_simplified").get()
-# data = [doc.to_dict() for doc in query]
-# df1 = pd.DataFrame.from_records(data)
-# print(df1.info())
+#Reseting page's input elements
+def reset_inputs():
+  components.html("""
+  <script>
+    document.getElementsByTagName('input').reset();
+  </script>
+  """)
