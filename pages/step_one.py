@@ -109,6 +109,7 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
+        functions.scroll_to_top()
      
 
         #Reloading page
@@ -137,6 +138,7 @@ if excluded:
             }
         )
         st.success("O artigo foi **excluído** com sucesso da revisão.")
+        functions.scroll_to_top()
 
 
         #Reloading page

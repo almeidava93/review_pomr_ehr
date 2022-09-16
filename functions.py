@@ -100,3 +100,13 @@ def add_new_articles(file, search_strategy):
 def reset_inputs(keys: list):
     for key in keys: 
       st.session_state[key] = False
+
+
+#Scroll to the top of the page function
+def scroll_to_top():
+  components.html("""
+  <script>
+    window.scrollTo(0, 0);
+  </script>
+  
+  """)
