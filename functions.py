@@ -106,4 +106,4 @@ def reset_inputs(keys: list):
 
 #Scroll to the top of the page function
 def scroll_to_top():
-  st_javascript("window.scrollTo(0, 0);")
+  components.html("document.scrollTo(0,0);")
