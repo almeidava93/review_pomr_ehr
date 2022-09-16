@@ -100,6 +100,13 @@ def add_new_articles(file, search_strategy):
 def reset_inputs():
   components.html("""
   <script>
-    document.getElementsByTagName('input').reset();
+    resetInputs = function () {
+    fields = document.getElementsByTagName('input');
+    for (var i = 0; i < fields.length; ++i) {
+        if(fields[i].checked = true)
+            fields[i].checked = false;
+      }
+    }
+    resetInputs()
   </script>
   """)
