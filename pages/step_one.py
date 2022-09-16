@@ -78,10 +78,10 @@ with column_b:
 column_a, column_b = st.columns(2)
 
 with column_a:
-    excluded = st.button("Excluir", key="bt_excluded", help=None, on_click=functions.reset_inputs, args=exclusion_criteria, kwargs=None)
+    excluded = st.button("Excluir", key="bt_excluded", help=None, on_click=functions.reset_inputs, args=[exclusion_criteria], kwargs=None)
 
 with column_b:
-    included = st.button("Incluir", key="bt_included", help=None, on_click=functions.reset_inputs, args=inclusion_criteria, kwargs=None)
+    included = st.button("Incluir", key="bt_included", help=None, on_click=functions.reset_inputs, args=[inclusion_criteria], kwargs=None)
 
 if len(selected_inclusion_criteria) > 0 and len(selected_exclusion_criteria) > 0:
     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
