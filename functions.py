@@ -4,6 +4,8 @@
 
 import streamlit as st
 import streamlit.components.v1 as components
+from streamlit_javascript import st_javascript
+
 from google.cloud import firestore
 import json
 import nbib
@@ -104,9 +106,4 @@ def reset_inputs(keys: list):
 
 #Scroll to the top of the page function
 def scroll_to_top():
-  st.markdown("""
-  <script>
-    window.scrollTo(0, 0);
-  </script>
-  
-  """, unsafe_allow_html=True)
+  st_javascript("window.scrollTo(0, 0);")
