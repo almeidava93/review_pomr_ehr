@@ -107,7 +107,7 @@ def add_new_articles(file, search_strategy):
     st.write(df2)
 
     #Check differences and drop duplicates based on pubmed_id
-    df_diff = pd.concat([df1,df2]).drop_duplicates(subset=['pubmed_id'], keep=False)
+    df_diff = pd.concat([df1,df2]).drop_duplicates(subset=['pubmed_id'], keep=False, ignore_index=True)
     #df_diff.drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True, inplace=True)
     #df_diff = df2[df2['pubmed_id'].isin(df1['pubmed_id'])].dropna()
     st.write(f"df_diff: {len(df_diff)}; df1: {len(df1)}; df2: {len(df2)}")
