@@ -85,7 +85,7 @@ def add_new_articles(file, search_strategy):
     #Load current database articles
     query = firestore_client.collection("articles_simplified").get()
     data = [doc.to_dict() for doc in query]
-    df1 = pd.DataFrame.from_records(data)[['pubmed_id']].sort_values(by=['pubmed_id'], ascending=True).reset_index()
+    df1 = pd.DataFrame.from_records(data)[['pubmed_id']].astype('int32').sort_values(by=['pubmed_id'], ascending=True).reset_index()
 
     #Load new articles
     ##To convert to a string based IO:
@@ -96,7 +96,7 @@ def add_new_articles(file, search_strategy):
     string_data = stringio.read()
     
     articles_data = nbib.read(string_data)
-    df2 = pd.DataFrame.from_records(articles_data)[['pubmed_id']].sort_values(by=['pubmed_id'], ascending=True).reset_index()
+    df2 = pd.DataFrame.from_records(articles_data)[['pubmed_id']].astype('int32').sort_values(by=['pubmed_id'], ascending=True).reset_index()
 
     st.write(df1)
     st.write(df2)
