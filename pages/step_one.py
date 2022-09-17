@@ -8,7 +8,6 @@ import time
 import main
 import functions
 
-functions.local_css()
 
 st.title("Passo 1: Revisão títulos e resumos")
 
@@ -146,16 +145,6 @@ if excluded:
         st.experimental_rerun()
 
 
-
-#STYLING
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-local_css('style.css')
-
-
-
 #Designing the sidebar
 n_reviewed_articles = len(dashboard_data[(dashboard_data['included']==1) | (dashboard_data['excluded']==1)])
 n_all_articles = len(dashboard_data)
@@ -165,6 +154,4 @@ with st.sidebar:
     st.write(f"""**Artigos incluídos**: {len(dashboard_data[(dashboard_data['included']==1)])}""")    
     st.markdown(f"""**Artigos excluídos**: {len(dashboard_data[(dashboard_data['excluded']==1)])}""")
 
-
-
-#st.markdown(functions.card(current_article_data), unsafe_allow_html=True)
+functions.local_css()
