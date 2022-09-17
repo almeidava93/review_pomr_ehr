@@ -84,6 +84,8 @@ def upload_articles_data(search_strategy: str, articles_df: pd.DataFrame, firest
 
 
 def add_new_articles(file, search_strategy):
+  with st.spinner('Avaliando artigos...'):
+  
     #Load current database articles
     query = firestore_client.collection("articles_simplified").get()
     data = [doc.to_dict() for doc in query]
@@ -92,7 +94,6 @@ def add_new_articles(file, search_strategy):
     #Load new articles
     ##To convert to a string based IO:
     stringio = io.StringIO(file.getvalue().decode("utf-8"))
-    st.write(stringio)
 
     ##To read file as string:
     string_data = stringio.read()
