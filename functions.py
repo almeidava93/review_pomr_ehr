@@ -112,7 +112,7 @@ def add_new_articles(file, search_strategy):
     #Select only the new articles
     new_articles_df = pd.DataFrame.from_records(articles_data)
     new_articles_df['pubmed_id'] = new_articles_df['pubmed_id'].astype('int32')
-    new_articles_df = new_articles_df[new_articles_df['pubmed_id'] == df_diff['pubmed_id']]
+    new_articles_df = new_articles_df.loc[new_articles_df['pubmed_id'] == df_diff['pubmed_id']]
     st.write(new_articles_df)
     st.write(len(new_articles_df))
 
