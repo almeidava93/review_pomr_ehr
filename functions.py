@@ -99,7 +99,9 @@ def add_new_articles(file, search_strategy):
     df2 = pd.DataFrame.from_records(articles_data)  
 
     #Check differences and drop duplicates based on pubmed_id
-    st.write(df1[['pubmed_id']].compare(df2[['pubmed_id']]))
+    #st.write(df1[['pubmed_id']].compare(df2[['pubmed_id']]))
+    st.write(df1[['pubmed_id']])
+    st.write(df2[['pubmed_id']])
 
     #Save articles at the database
 
