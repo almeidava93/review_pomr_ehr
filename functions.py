@@ -118,3 +118,22 @@ def add_new_articles(file, search_strategy):
       #Save articles at the database
       upload_articles_data(search_strategy, new_articles_df)
       st.success(f"Deu certo! **{len(new_articles_df)}** novos artigos foram adicionados à base de dados para compor nossa revisão.")
+
+
+def card(article_data_series):
+  all_authors = ""
+  for author in article_data_series['authors']:
+      all_authors += author['author'] + "; "
+  
+  
+  return f"""
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{article_data_series['title']}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
+      <p class="card-text">{article_data_series['abstract']}</p>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series['pubmed_id']}/" class="card-link">Ver no Pubmed</a>
+    </div>
+  </div>
+  """
