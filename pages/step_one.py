@@ -111,8 +111,6 @@ if included:
             }
         )
         st.success("O artigo foi **incluído** com sucesso na revisão.")
-        functions.scroll_to_top()
-     
 
         #Reloading page
         st.experimental_rerun()
