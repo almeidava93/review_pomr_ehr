@@ -57,6 +57,8 @@ def set_reviewers_data():
     doc_ref = firestore_client.collection("reviewers").document(reviewer)
     doc_ref.set({"email": reviewer})
 
+
+#Function for articles data upload to the database
 def upload_articles_data(search_strategy: str, articles_df: pd.DataFrame, firestore_client=firestore_client):
   #Collection with articles full data:
   for index, article in tqdm(articles_df.iterrows()):
@@ -86,7 +88,6 @@ def add_new_articles(file, search_strategy):
     query = firestore_client.collection("articles_simplified").get()
     data = [doc.to_dict() for doc in query]
     df1 = pd.DataFrame.from_records(data)[['pubmed_id']].astype('int32')
-    #.sort_values(by=['pubmed_id'], ascending=True).reset_index()
 
     #Load new articles
     ##To convert to a string based IO:
@@ -98,32 +99,21 @@ def add_new_articles(file, search_strategy):
     
     articles_data = nbib.read(string_data)
     df2 = pd.DataFrame.from_records(articles_data)[['pubmed_id']].astype('int32')
-    #.sort_values(by=['pubmed_id'], ascending=True).reset_index()
-
-    st.write(df1)
-    st.write(df2)
 
     #Check differences and drop duplicates based on pubmed_id
     df_diff = pd.concat([df1,df2]).drop_duplicates(subset=['pubmed_id'], keep=False, ignore_index=True)
-    #df_diff.drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True, inplace=True)
-    #df_diff = df2[df2['pubmed_id'].isin(df1['pubmed_id'])].dropna()
-    st.write(f"df_diff: {len(df_diff)}; df1: {len(df1)}; df2: {len(df2)}")
 
-    #Select only the new articles
-    new_articles_df = pd.DataFrame.from_records(articles_data)
-    new_articles_df['pubmed_id'] = new_articles_df['pubmed_id'].astype('int32')
+    if len(df_diff) == 0:
+      st.error('Nenhum artigo novo foi encontrado nas referências que você nos enviou. Nossa base de dados continua igual.', icon="🚨")
+    
+    else:
+      #Select only the new articles based on pubmed_id
+      new_articles_df = pd.DataFrame.from_records(articles_data)
+      new_articles_df['pubmed_id'] = new_articles_df['pubmed_id'].astype('int32')
 
-    articles_indices = new_articles_df.index[new_articles_df["pubmed_id"].isin(df_diff['pubmed_id'])]
-    new_articles_df = new_articles_df.iloc[articles_indices,:]
+      articles_indices = new_articles_df.index[new_articles_df["pubmed_id"].isin(df_diff['pubmed_id'])]
+      new_articles_df = new_articles_df.iloc[articles_indices,:]
 
-    # index = df.index
-    # condition = df["fruit"] == "apple"
-    # apples_indices = index[condition]
-
-    st.write(new_articles_df)
-    st.write(len(new_articles_df))
-
-    #Save articles at the database
-
-
-    pass
+      #Save articles at the database
+      upload_articles_data(search_strategy, new_articles_df)
+      st.success(f"Deu certo! **{len(new_articles_df)}** novos artigos foram adicionados à base de dados para compor nossa revisão.")
