@@ -2,6 +2,7 @@
 #Firestore database documentation: https://googleapis.dev/python/firestore/latest/index.html
 
 
+import string
 import streamlit as st
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
@@ -11,6 +12,7 @@ import json
 import nbib
 import pandas as pd
 from tqdm import tqdm
+import io
 
 
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
@@ -86,7 +88,14 @@ def add_new_articles(file, search_strategy):
     df1 = pd.DataFrame.from_records(data)
 
     #Load new articles
-    articles_data = nbib.read_file(file)
+    ##To convert to a string based IO:
+    stringio = io.StringIO(file.getvalue().decode("utf-8"))
+    st.write(stringio)
+
+    ##To read file as string:
+    string_data = stringio.read()
+    
+    articles_data = nbib.read(string_data)
     df2 = pd.DataFrame.from_records(articles_data)  
 
     #Check differences and drop duplicates based on pubmed_id
