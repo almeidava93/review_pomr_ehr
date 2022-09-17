@@ -109,6 +109,12 @@ def add_new_articles(file, search_strategy):
     #df_diff = df2[df2['pubmed_id'].isin(df1['pubmed_id'])].dropna()
     st.write(f"df_diff: {len(df_diff)}; df1: {len(df1)}; df2: {len(df2)}")
 
+    #Select only the new articles
+    new_articles_df = pd.DataFrame.from_records(articles_data)
+    new_articles_df['pubmed_id'] = new_articles_df['pubmed_id'].astype('int32')
+    new_articles_df = new_articles_df[new_articles_df['pubmed_id'] == df_diff['pubmed_id']]
+    st.write(new_articles_df)
+    st.write(len(new_articles_df))
 
     #Save articles at the database
 
