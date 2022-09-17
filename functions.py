@@ -99,8 +99,8 @@ def add_new_articles(file, search_strategy):
     df2 = pd.DataFrame.from_records(articles_data)  
 
     #Check differences and drop duplicates based on pubmed_id
-    df_diff = pd.concat([df1[['pubmed_id']],df2[['pubmed_id']]])
-    df_diff = df_diff.drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True)
+    df_diff = pd.concat([df1,df2])
+    df_diff.drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True, inplace=True)
     st.write(f"df_diff: {len(df_diff)}; df1: {len(df1)}; df2: {len(df2)}")
 
 
