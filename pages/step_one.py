@@ -138,8 +138,6 @@ if excluded:
             }
         )
         st.success("O artigo foi **excluído** com sucesso da revisão.")
-        functions.scroll_to_top()
-
 
         #Reloading page
         st.experimental_rerun()
