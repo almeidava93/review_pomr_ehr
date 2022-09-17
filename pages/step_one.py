@@ -8,6 +8,7 @@ import time
 import main
 import functions
 
+functions.local_css()
 
 st.title("Passo 1: Revisão títulos e resumos")
 
