@@ -164,4 +164,4 @@ with st.sidebar:
 
 
 
-st.markdown(functions.card(current_article_data), unsafe_allow_html=True)
+#st.markdown(functions.card(current_article_data), unsafe_allow_html=True)
