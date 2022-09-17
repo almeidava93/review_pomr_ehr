@@ -20,7 +20,7 @@ not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashbo
 current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
 
 def get_current_article_data(article_pmid):
-    query = main.firestore_client.collection("articles_simplified").document(article_pmid).get()
+    query = main.firestore_client.collection("articles_full").document(article_pmid).get()
     filtered_collection_dict = query.to_dict()#Returns list of dictionaries 
     filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict, index=[0]) #Returns dataframe
     return filtered_collection_dataframe
