@@ -112,7 +112,14 @@ def add_new_articles(file, search_strategy):
     #Select only the new articles
     new_articles_df = pd.DataFrame.from_records(articles_data)
     new_articles_df['pubmed_id'] = new_articles_df['pubmed_id'].astype('int32')
-    new_articles_df = new_articles_df.loc[new_articles_df['pubmed_id'] == df_diff['pubmed_id']]
+
+    articles_indices = new_articles_df.index[new_articles_df["pubmed_id"].isin(df_diff['pubmed_id'])]
+    new_articles_df = new_articles_df.iloc[articles_indices,:]
+
+    # index = df.index
+    # condition = df["fruit"] == "apple"
+    # apples_indices = index[condition]
+
     st.write(new_articles_df)
     st.write(len(new_articles_df))
 
