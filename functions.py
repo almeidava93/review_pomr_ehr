@@ -141,7 +141,7 @@ def card(article_data_series):
       <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
       <p class="card-text">{abstract}</p>
       <h6 class="card-subtitle mb-2 text-muted">Language: {article_data_series.at[0, 'language']}</h6>
-      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series['pubmed_id']}/" class="card-link">Ver no Pubmed</a>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series.at[0, 'pubmed_id']}/" class="card-link">Ver no Pubmed</a>
     </div>
   </div>
   """
