@@ -85,7 +85,7 @@ def add_new_articles(file, search_strategy):
     #Load current database articles
     query = firestore_client.collection("articles_simplified").get()
     data = [doc.to_dict() for doc in query]
-    df1 = pd.DataFrame.from_records(data)
+    df1 = pd.DataFrame.from_records(data).sort_values(by=['pubmed_id']).reindex()
 
     #Load new articles
     ##To convert to a string based IO:
@@ -96,12 +96,12 @@ def add_new_articles(file, search_strategy):
     string_data = stringio.read()
     
     articles_data = nbib.read(string_data)
-    df2 = pd.DataFrame.from_records(articles_data)  
+    df2 = pd.DataFrame.from_records(articles_data).sort_values(by=['pubmed_id']).reindex()
 
     #Check differences and drop duplicates based on pubmed_id
     #df_diff = pd.concat([df1,df2]).drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True)
     #df_diff.drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True, inplace=True)
-    df_diff = df2[ ~df2['pubmed_id'].isin(df1['pubmed_id'])].dropna()
+    df_diff = df2[df2['pubmed_id'].isin(df1['pubmed_id'])].dropna()
     st.write(f"df_diff: {len(df_diff)}; df1: {len(df1)}; df2: {len(df2)}")
 
 
