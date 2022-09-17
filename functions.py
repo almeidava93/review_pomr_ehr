@@ -104,7 +104,7 @@ def add_new_articles(file, search_strategy):
     df_diff = pd.concat([df1,df2]).drop_duplicates(subset=['pubmed_id'], keep=False, ignore_index=True)
 
     if len(df_diff) == 0:
-      st.error('Nenhum artigo novo foi encontrado nas referências que você nos enviou. Nossa base de dados continua igual.', icon="🚨")
+      st.warning('Nenhum artigo novo foi encontrado nas referências que você nos enviou. Nossa base de dados continua igual.', icon="🚨")
     
     else:
       #Select only the new articles based on pubmed_id
