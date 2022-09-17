@@ -27,16 +27,18 @@ def get_current_article_data(article_pmid):
 
 current_article_data = get_current_article_data(current_article_pmid)
 
+st.markdown(functions.card(current_article_data), unsafe_allow_html=True)
 
 
-st.subheader(str(current_article_data.at[0,'title']))
 
-if str(current_article_data.at[0,'abstract']) != 'nan':
-    st.write(str(current_article_data.at[0,'abstract']))
-else:
-    st.markdown("*Este artigo não tem resumo disponível...*")
+# st.subheader(str(current_article_data.at[0,'title']))
 
-st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data.at[0,'pubmed_id'])}/")
+# if str(current_article_data.at[0,'abstract']) != 'nan':
+#     st.write(str(current_article_data.at[0,'abstract']))
+# else:
+#     st.markdown("*Este artigo não tem resumo disponível...*")
+
+# st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data.at[0,'pubmed_id'])}/")
 
 
 st.markdown("***")

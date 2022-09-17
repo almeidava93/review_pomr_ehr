@@ -1,8 +1,36 @@
 import streamlit as st
 import pandas as pd
 import nbib
+import json
+from google.cloud import firestore
+
 
 import functions
+
+database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
+service_account_info = json.load(database_keys)
+reviewers = [
+  "almeida.va93@gmail.com",
+  "henrique.t.arai@gmail.com",
+  "mariela204@gmail.com"
+]
+
+
+#Connecting with the firestore database
+@st.cache(hash_funcs={firestore.Client: id}, ttl=None, show_spinner=True)
+def load_firestore_client(service_account_info = service_account_info):
+  firestore_client = firestore.Client.from_service_account_info(service_account_info)
+  return firestore_client
+
+firestore_client = load_firestore_client() #Loads cached database connection
+
+
+def get_dashboard_data(user=st.experimental_user.email):
+  query = firestore_client.collection("articles_first_review").document(user).collection("articles").get()
+  filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
+  filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
+  return filtered_collection_dataframe
+
 
 # call back function -> runs BEFORE the rest of the app
 def reset_button():
@@ -41,4 +69,16 @@ for author in article['authors']:
 print(all_authors)
 
 
-st.markdown(functions.card(article), unsafe_allow_html=True)
+dashboard_data = get_dashboard_data("almeida.va93@gmail.com")
+not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
+current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
+
+def get_current_article_data(article_pmid):
+    query = firestore_client.collection("articles_full").document(article_pmid).get()
+    filtered_collection_dict = query.to_dict()#Returns list of dictionaries 
+    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict, index=[0]) #Returns dataframe
+    return filtered_collection_dataframe
+
+current_article_data = get_current_article_data(current_article_pmid)
+
+st.markdown(functions.card(current_article_data), unsafe_allow_html=True)

@@ -13,6 +13,7 @@ import nbib
 import pandas as pd
 from tqdm import tqdm
 import io
+import ast
 
 
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
@@ -122,17 +123,24 @@ def add_new_articles(file, search_strategy):
 
 def card(article_data_series):
   all_authors = ""
-  for author in article_data_series['authors']:
+  for author in ast.literal_eval(article_data_series.at[0, 'authors']):
       all_authors += author['author'] + "; "
   
-  
+  if str(article_data_series.at[0,'abstract']) != 'nan':
+    abstract = str(article_data_series.at[0,'abstract'])
+  else:
+    abstract = """<i>No abstract available...</i>
+  <br>
+  <br>"""
+
   return f"""
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{article_data_series['title']}</h5>
+      <h5 class="card-title">{article_data_series.at[0, 'title']}</h5>
       <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
-      <p class="card-text">{article_data_series['abstract']}</p>
+      <p class="card-text">{abstract}</p>
+      <h6 class="card-subtitle mb-2 text-muted">Language: {article_data_series.at[0, 'language']}</h6>
       <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series['pubmed_id']}/" class="card-link">Ver no Pubmed</a>
     </div>
   </div>
