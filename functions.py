@@ -98,6 +98,9 @@ def add_new_articles(file, search_strategy):
     articles_data = nbib.read(string_data)
     df2 = pd.DataFrame.from_records(articles_data).sort_values(by=['pubmed_id']).reindex()
 
+    st.write(df1)
+    st.write(df2)
+
     #Check differences and drop duplicates based on pubmed_id
     #df_diff = pd.concat([df1,df2]).drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True)
     #df_diff.drop_duplicates(subset='pubmed_id', keep=False, ignore_index=True, inplace=True)
