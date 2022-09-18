@@ -29,8 +29,7 @@ firestore_client = load_firestore_client() #Loads cached database connection
 #Page rendering
 st.title("Dashboard de referências")
 
-# st.write(f"Você logou como: {st.experimental_user.email}")
-st.write(f"Você logou como: almeida.va93@gmail.com")
+st.write(f"Você logou como: {st.experimental_user.email}")
 
 st.markdown("""***""")
 
@@ -42,7 +41,7 @@ def get_dashboard_data(user):
   filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
   return filtered_collection_dataframe
 
-dashboard_data = get_dashboard_data("almeida.va93@gmail.com")
+dashboard_data = get_dashboard_data(user = st.experimental_user.email)
 
 with column_a:
     st.subheader("Total de artigos")

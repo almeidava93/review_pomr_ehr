@@ -11,7 +11,7 @@ import functions
 st.title("Histórico de revisões")
 
 #Get users already reviewed articles
-dashboard_data = functions.get_dashboard_data(user = "almeida.va93@gmail.com")
+dashboard_data = functions.get_dashboard_data(user = st.experimental_user.email)
 reviewed_articles = dashboard_data[(dashboard_data['excluded']!=0) | (dashboard_data["included"]!=0)]
 reviewed_articles = reviewed_articles.sort_values(by="timestamp", ascending=False)
 #st.write(reviewed_articles.sort_values(by="timestamp", ascending=False))

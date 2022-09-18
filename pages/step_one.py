@@ -17,7 +17,7 @@ st.title("Passo 1: Revisão títulos e resumos")
 
 st.markdown("""***""")
 
-dashboard_data = main.get_dashboard_data(user = "almeida.va93@gmail.com")
+dashboard_data = main.get_dashboard_data(user = st.experimental_user.email)
 not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
 current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
 
@@ -79,7 +79,7 @@ if included:
         st.error(error_message)
 
     else:
-        doc_ref = main.firestore_client.collection("articles_first_review").document("almeida.va93@gmail.com").collection("articles").document(current_article_pmid)
+        doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
         doc_ref.update(
             {
                 "included": True,
@@ -105,7 +105,7 @@ if excluded:
         st.error(error_message)
 
     else:
-        doc_ref = main.firestore_client.collection("articles_first_review").document("almeida.va93@gmail.com").collection("articles").document(current_article_pmid)
+        doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
         doc_ref.update(
             {
                 "included": False,
