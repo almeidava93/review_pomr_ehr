@@ -1,4 +1,6 @@
 import streamlit as st
+import streamlit.components.v1 as components
+
 import nbib
 import pandas as pd
 import uuid
@@ -11,41 +13,26 @@ import functions
 
 st.title("Passo 1: Revisão títulos e resumos")
 
-st.write(f"Você logou como: {st.experimental_user.email}")
+#st.write(f"Você logou como: {st.experimental_user.email}")
 
 st.markdown("""***""")
 
-dashboard_data = main.get_dashboard_data(user = st.experimental_user.email)
+dashboard_data = main.get_dashboard_data(user = "almeida.va93@gmail.com")
 not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
 current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
 
-def get_current_article_data(article_pmid):
-    query = main.firestore_client.collection("articles_full").document(article_pmid).get()
-    filtered_collection_dict = query.to_dict()#Returns list of dictionaries 
-    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict, index=[0]) #Returns dataframe
-    return filtered_collection_dataframe
+current_article_data = functions.get_current_article_data(current_article_pmid)
 
-current_article_data = get_current_article_data(current_article_pmid)
-
-st.markdown(functions.card(current_article_data), unsafe_allow_html=True)
-
-
-
-# st.subheader(str(current_article_data.at[0,'title']))
-
-# if str(current_article_data.at[0,'abstract']) != 'nan':
-#     st.write(str(current_article_data.at[0,'abstract']))
-# else:
-#     st.markdown("*Este artigo não tem resumo disponível...*")
-
-# st.write(f"https://pubmed.ncbi.nlm.nih.gov/{str(current_article_data.at[0,'pubmed_id'])}/")
-
+try:
+    st.markdown(functions.card(current_article_data), unsafe_allow_html=True)
+except:
+    st.write(current_article_data)
 
 st.markdown("***")
 
 column_a, column_b = st.columns(2)
 
-with column_a:
+with st.form("exclusion", clear_on_submit=True):
     st.markdown("**Critérios de exclusão**")
     exclusion_criteria = ["Outra língua que não português ou inglês", 
                             "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico ou de estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
@@ -56,8 +43,10 @@ with column_a:
     selected_exclusion_criteria = [exclusion_criteria[i] for i in indices]
     # st.write(selected_exclusion_criteria)
 
+    excluded = st.form_submit_button("Excluir", help=None, kwargs=None)
 
-with column_b:
+
+with st.form("inclusion", clear_on_submit=True):
     st.markdown("**Critérios de inclusão**")
     inclusion_criteria = ["Alguma aplicação do RCOP em um prontuário eletrônico (p.e., organizar lista de problemas, episódios de cuidado, SOAP ou outras maneiras de registro orientado por problemas)", 
                        "Estudo de impactos do uso do RCOP para o paciente", 
@@ -72,23 +61,12 @@ with column_b:
     #     st.write(inclusion_criteria[i])
     # st.write(selected_inclusion_criteria)
 
+    included = st.form_submit_button("Incluir", help=None, kwargs=None)
 
-
-
-
-
-column_a, column_b = st.columns(2)
-
-with column_a:
-    excluded = st.button("Excluir", key="bt_excluded", help=None, kwargs=None)
-
-with column_b:
-    included = st.button("Incluir", key="bt_included", help=None, kwargs=None)
 
 if len(selected_inclusion_criteria) > 0 and len(selected_exclusion_criteria) > 0:
     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
     st.error(error_message)
-
 
 
 if included:
@@ -101,7 +79,7 @@ if included:
         st.error(error_message)
 
     else:
-        doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
+        doc_ref = main.firestore_client.collection("articles_first_review").document("almeida.va93@gmail.com").collection("articles").document(current_article_pmid)
         doc_ref.update(
             {
                 "included": True,
@@ -116,7 +94,6 @@ if included:
         st.experimental_rerun()
 
 
-
 if excluded:
     if len(selected_exclusion_criteria) == 0:
         exclusion_error_message = "Para **excluir** este artigo, selecione ao menos um dos critérios de exclusão."
@@ -128,7 +105,7 @@ if excluded:
         st.error(error_message)
 
     else:
-        doc_ref = main.firestore_client.collection("articles_first_review").document(st.experimental_user.email).collection("articles").document(current_article_pmid)
+        doc_ref = main.firestore_client.collection("articles_first_review").document("almeida.va93@gmail.com").collection("articles").document(current_article_pmid)
         doc_ref.update(
             {
                 "included": False,
