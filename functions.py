@@ -2,11 +2,12 @@
 #Firestore database documentation: https://googleapis.dev/python/firestore/latest/index.html
 
 
-import string
 import streamlit as st
 import streamlit.components.v1 as components
 from streamlit_javascript import st_javascript
+import math
 
+from datetime import datetime
 from google.cloud import firestore
 import json
 import nbib
@@ -121,10 +122,26 @@ def add_new_articles(file, search_strategy):
       st.success(f"Deu certo! **{len(new_articles_df)}** novos artigos foram adicionados à base de dados para compor nossa revisão.")
 
 
+def get_current_article_data(article_pmid):
+    query = firestore_client.collection("articles_full").document(article_pmid).get()
+    filtered_collection_dict = query.to_dict()#Returns list of dictionaries 
+    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict, index=[0]) #Returns dataframe
+    return filtered_collection_dataframe
+
+def get_dashboard_data(user):
+  query = firestore_client.collection("articles_first_review").document(user).collection("articles").get()
+  filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
+  filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
+  return filtered_collection_dataframe
+
+
 def card(article_data_series):
   all_authors = ""
-  for author in ast.literal_eval(article_data_series.at[0, 'authors']):
-      all_authors += author['author'] + "; "
+  try:
+    for author in ast.literal_eval(article_data_series.at[0, 'authors']):
+        all_authors += author['author'] + "; "
+  except:
+    pass
   
   if str(article_data_series.at[0,'abstract']) != 'nan':
     abstract = str(article_data_series.at[0,'abstract'])
@@ -137,17 +154,65 @@ def card(article_data_series):
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">{article_data_series.at[0, 'title']}</h5>
+      <h5 class="card-title"><b>{article_data_series.at[0, 'title']}</b></h5>
       <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
       <p class="card-text">{abstract}</p>
       <h6 class="card-subtitle mb-2 text-muted">Language: {article_data_series.at[0, 'language']}</h6>
-      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series.at[0, 'pubmed_id']}/" class="card-link">Ver no Pubmed</a>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series.at[0, 'pubmed_id']}/", class="card-link">Ver no Pubmed</a>
     </div>
   </div>
   """
 
+def article_history_expander(article_data: pd.DataFrame, reviewed_article: pd.DataFrame):
+  if reviewed_article['included']==True and reviewed_article['excluded']==False:
+    expander_title = "🟩" + article_data.at[0,'title']
+  else:
+    expander_title = "🟥" + article_data.at[0,'title']
+
+  try:
+    review_timestamp = datetime.fromtimestamp(reviewed_article['timestamp']).strftime("%A, %d %B, %Y")
+  except:
+    review_timestamp = "..."
+  
+  with st.expander(label = expander_title):
+    if article_data.at[0,'abstract'] == "nan":
+      st.write('*No abstract available*')
+    else: 
+      st.write(article_data.at[0,'abstract'])
+
+    all_authors = ""
+    try:
+      for author in ast.literal_eval(article_data.at[0, 'authors']):
+          all_authors += author['author'] + "; "
+    except:
+      pass
+
+    st.markdown(f'''
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <p class="card-subtitle mb-2 text-muted">Reviewed at {review_timestamp}</p>
+    <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data.at[0, 'pubmed_id']}/" class="card-link">Ver no Pubmed</a>''',
+    unsafe_allow_html=True)
+      
+    
+  
+  
+  all_authors = ""
+  for author in ast.literal_eval(article_data.at[0, 'authors']):
+      all_authors += author['author'] + "; "
+  
+  if str(article_data.at[0,'abstract']) != 'nan':
+    abstract = str(article_data.at[0,'abstract'])
+  else:
+    abstract = """<i>No abstract available...</i>
+  <br>
+  <br>"""
+
+  expander = st.expander(label= article_data.at[0, 'title'])
+
+  return expander
 
 #STYLING
 def local_css(file_name='style.css'):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+

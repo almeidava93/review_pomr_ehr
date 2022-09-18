@@ -29,19 +29,20 @@ firestore_client = load_firestore_client() #Loads cached database connection
 #Page rendering
 st.title("Dashboard de referências")
 
-st.write(f"Você logou como: {st.experimental_user.email}")
+# st.write(f"Você logou como: {st.experimental_user.email}")
+st.write(f"Você logou como: almeida.va93@gmail.com")
 
 st.markdown("""***""")
 
 column_a, column_b, column_c = st.columns(3)
 
-def get_dashboard_data(user=st.experimental_user.email):
+def get_dashboard_data(user):
   query = firestore_client.collection("articles_first_review").document(user).collection("articles").get()
   filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
   filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
   return filtered_collection_dataframe
 
-dashboard_data = get_dashboard_data()
+dashboard_data = get_dashboard_data("almeida.va93@gmail.com")
 
 with column_a:
     st.subheader("Total de artigos")
@@ -59,7 +60,7 @@ st.markdown("""***""")
 
 st.markdown("**Progresso da revisão - primeira etapa**")
 
-def get_user_review_progress(user=st.experimental_user.email):
+def get_user_review_progress(user):
   dashboard_data = get_dashboard_data(user)
   return dashboard_data
 

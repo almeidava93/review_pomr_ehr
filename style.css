@@ -11,6 +11,11 @@
     font-size: 1rem;
 }
 
-.css-1cpxqw2 .edgvbvh9 .stButton {
+.stButton > button {
     width: 100%
 }
+
+/* div[data-testid="stForm"] {
+    height:420px;
+} */
+
