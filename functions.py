@@ -20,6 +20,9 @@ import ast
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.load(database_keys)
 
+current_user = st.experimental_user.email
+#current_user = "almeida.va93@gmail.com"
+
 
 #Connecting with the firestore database
 @st.cache(hash_funcs={firestore.Client: id}, ttl=None, show_spinner=True)
@@ -214,5 +217,25 @@ def article_history_expander(article_data: pd.DataFrame, reviewed_article: pd.Da
 #STYLING
 def local_css(file_name='style.css'):
     with open(file_name) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        st.markdown(f"""<style>{f.read()}</style>""", unsafe_allow_html=True)
+      
 
+def js_script():
+  return """
+        <script>
+          const stDoc = window.parent.document;
+          items = Array.from(stDoc.querySelectorAll('div.streamlit-expanderHeader'));
+          for (let item of items) {
+            if (item.textContent.includes("🟩")) {
+              item.style.color='green';
+              item.classList.add('included');
+            };
+          };
+          for (let item of items) {
+            if (item.textContent.includes("🟥")) {
+              item.style.color='red';
+              item.classList.add('excluded');
+            };
+          };
+        </script>
+        """
