@@ -7,6 +7,9 @@ from google.cloud import firestore
 import json
 import pandas as pd
 
+import functions
+from functions import current_user
+
 
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.load(database_keys)
@@ -29,7 +32,7 @@ firestore_client = load_firestore_client() #Loads cached database connection
 #Page rendering
 st.title("Dashboard de referências")
 
-st.write(f"Você logou como: {st.experimental_user.email}")
+st.write(f"Você logou como: {current_user}")
 
 st.markdown("""***""")
 
@@ -41,7 +44,7 @@ def get_dashboard_data(user):
   filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
   return filtered_collection_dataframe
 
-dashboard_data = get_dashboard_data(user = st.experimental_user.email)
+dashboard_data = get_dashboard_data(current_user)
 
 with column_a:
     st.subheader("Total de artigos")

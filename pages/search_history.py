@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import nbib
 import pandas as pd
 import uuid
@@ -6,24 +7,32 @@ import time
 
 #Custom imports
 import functions
+from functions import current_user
+
 
 
 st.title("Histórico de revisões")
 
 #Get users already reviewed articles
-dashboard_data = functions.get_dashboard_data(user = st.experimental_user.email)
+dashboard_data = functions.get_dashboard_data(current_user)
 reviewed_articles = dashboard_data[(dashboard_data['excluded']!=0) | (dashboard_data["included"]!=0)]
-reviewed_articles = reviewed_articles.sort_values(by="timestamp", ascending=False)
-#st.write(reviewed_articles.sort_values(by="timestamp", ascending=False))
 
 #Sort then from the most recent review to the firt review
+reviewed_articles = reviewed_articles.sort_values(by="timestamp", ascending=False).reset_index(drop=True)
 
+#Select how many results to show to the user
+n_results = st.number_input("Selecione quantos resultados deseja consultar", min_value=1, max_value=len(reviewed_articles), value=10, step=None, format=None, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
 
 #Show each article data with title, abstract, pubmed link, exclusion ou inclusion criteria, if the article was included or excluded, 
 #a button to undo the review and put the article back to the queue
 for index, reviewed_article in reviewed_articles.iterrows():
-    article_data = functions.get_current_article_data(reviewed_article['pubmed_id'])
-    functions.article_history_expander(article_data, reviewed_article)
+    if index > (n_results - 1):
+        st.write(index)
+        st.write(n_results)
+        break
+    else:
+        article_data = functions.get_current_article_data(reviewed_article['pubmed_id'])
+        functions.article_history_expander(article_data, reviewed_article)
 
 
 
@@ -35,3 +44,4 @@ for index, reviewed_article in reviewed_articles.iterrows():
 
 #Styling
 functions.local_css()
+components.html(functions.js_script(), width=0, height=0)
