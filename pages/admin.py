@@ -8,7 +8,7 @@ import time
 import main
 import functions
 
-if st.experimental_user.email != "almeida.va93@gmail.com":
+if functions.current_user != "almeida.va93@gmail.com":
     exclusion_error_message = "Você não tem permissão para ver esta página."
     st.error(exclusion_error_message)
 
