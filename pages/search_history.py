@@ -25,16 +25,10 @@ n_results = st.number_input("Selecione quantos resultados deseja consultar", min
 #a button to undo the review and put the article back to the queue
 for index, reviewed_article in reviewed_articles.iterrows():
     if index > (n_results - 1):
-        st.write(index)
-        st.write(n_results)
         break
     else:
         article_data = functions.get_current_article_data(reviewed_article['pubmed_id'])
         functions.article_history_expander(article_data, reviewed_article)
-
-
-
-
 
 
 #Show articles list in blocks that can move forward or backwards
