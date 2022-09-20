@@ -21,7 +21,7 @@ reviewed_articles = dashboard_data[(dashboard_data['excluded']!=0) | (dashboard_
 reviewed_articles = reviewed_articles.sort_values(by="timestamp", ascending=False).reset_index(drop=True)
 
 #Select how many results to show to the user
-n_results = st.number_input("Selecione quantos resultados deseja consultar", min_value=1, max_value=len(reviewed_articles), value=10, step=None, format=None, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
+n_results = st.number_input("Selecione quantos resultados deseja consultar", min_value=1, max_value=len(reviewed_articles), value=5, step=None, format=None, key=None, help=None, on_change=None, args=None, kwargs=None, disabled=False)
 
 #Show each article data with title, abstract, pubmed link, exclusion ou inclusion criteria, if the article was included or excluded, 
 #a button to undo the review and put the article back to the queue
