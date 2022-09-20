@@ -11,9 +11,17 @@
 }
 
 .stButton > button {
-    width: 100%
+    width: 100%;
+}
+
+.card-link {
+    margin-bottom: 3rem;
 }
 
 /* div[data-testid="stForm"] {
     height:420px;
 } */
+
+div.stMarkdown {
+    margin-bottom: 0.75rem;
+}

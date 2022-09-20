@@ -21,6 +21,7 @@ database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.
 service_account_info = json.load(database_keys)
 
 current_user = st.experimental_user.email
+# current_user = 'almeida.va93@gmail.com'
 
 #Connecting with the firestore database
 @st.cache(hash_funcs={firestore.Client: id}, ttl=None, show_spinner=True)
@@ -164,53 +165,89 @@ def card(article_data_series):
   </div>
   """
 
+
+def review_history_card(article_data_series):
+  all_authors = ""
+  try:
+    for author in ast.literal_eval(article_data_series.at[0, 'authors']):
+        all_authors += author['author'] + "; "
+  except:
+    pass
+  
+  if str(article_data_series.at[0,'abstract']) != 'nan':
+    abstract = str(article_data_series.at[0,'abstract'])
+  else:
+    abstract = """<i>No abstract available...</i>
+  <br>
+  <br>"""
+
+  return f"""
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><b>{article_data_series.at[0, 'title']}</b></h5>
+      <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
+      <p class="card-text">{abstract}</p>
+      <h6 class="card-subtitle mb-2 text-muted">Language: {article_data_series.at[0, 'language']}</h6>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series.at[0, 'pubmed_id']}/", class="card-link">Ver no Pubmed</a>
+    </div>
+  </div>
+  """
+
+
+def undo_review(pubmed_id, reviewer):
+  doc_ref = firestore_client.collection("articles_first_review").document(reviewer).collection("articles").document(pubmed_id)
+  doc_ref.update({"included": False, "excluded": False, "timestamp": ""})
+
+
 def article_history_expander(article_data: pd.DataFrame, reviewed_article: pd.DataFrame):
+  #Defining expander title and symbol for included or excluded article
   if reviewed_article['included']==True and reviewed_article['excluded']==False:
     expander_title = "🟩" + article_data.at[0,'title']
   else:
     expander_title = "🟥" + article_data.at[0,'title']
 
+  #Adding review timestamp
   try:
     review_timestamp = datetime.fromtimestamp(reviewed_article['timestamp']).strftime("%A, %d %B, %Y")
   except:
     review_timestamp = "..."
   
   with st.expander(label = expander_title):
-    if article_data.at[0,'abstract'] == "nan":
-      st.write('*No abstract available*')
-    else: 
-      st.write(article_data.at[0,'abstract'])
-
+    #Adding all authors
     all_authors = ""
     try:
       for author in ast.literal_eval(article_data.at[0, 'authors']):
           all_authors += author['author'] + "; "
     except:
       pass
+    
+    #Adding abstract
+    if article_data.at[0,'abstract'] == "nan":
+      abstract = '*No abstract available*'
+    else: 
+      abstract = article_data.at[0,'abstract']
 
     st.markdown(f'''
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
+    <p class="card-text">{abstract}</p>
+    <h6 class="card-subtitle mb-2 text-muted">Language: {article_data.at[0, 'language']}</h6>
     <p class="card-subtitle mb-2 text-muted">Reviewed at {review_timestamp}</p>
     <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data.at[0, 'pubmed_id']}/" class="card-link">Ver no Pubmed</a>''',
     unsafe_allow_html=True)
-      
+
+    undo_review_button = st.button(label="Desfazer avaliação e devolver artigo para a fila de revisão", key=f"undo_review_{article_data.at[0, 'pubmed_id']}")
     
-  
-  
-  all_authors = ""
-  for author in ast.literal_eval(article_data.at[0, 'authors']):
-      all_authors += author['author'] + "; "
-  
-  if str(article_data.at[0,'abstract']) != 'nan':
-    abstract = str(article_data.at[0,'abstract'])
-  else:
-    abstract = """<i>No abstract available...</i>
-  <br>
-  <br>"""
+  if undo_review_button:
+    undo_review(article_data.at[0, 'pubmed_id'], current_user)
+    components.html("""
+    <script>
+      alert('The selected article went back to queue...')
+    </script>
+    """)
+    st.experimental_rerun()
 
-  expander = st.expander(label= article_data.at[0, 'title'])
-
-  return expander
 
 #STYLING
 def local_css(file_name='style.css'):
@@ -227,13 +264,15 @@ def js_script():
             if (item.textContent.includes("🟩")) {
               item.style.color='green';
               item.classList.add('included');
+              item.classList.remove('.st-cu');
             };
           };
+
           for (let item of items) {
             if (item.textContent.includes("🟥")) {
               item.style.color='red';
               item.classList.add('excluded');
+              item.classList.remove('.st-cu');
             };
           };
-        </script>
         """

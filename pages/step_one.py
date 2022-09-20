@@ -10,11 +10,13 @@ import time
 import main
 import functions
 
+current_user = st.experimental_user.email
+# current_user = "almeida.va93@gmail.com"
 
 
 st.title("Passo 1: Revisão títulos e resumos")
 
-current_user = st.experimental_user.email
+
 
 st.write(f"Você logou como: {current_user}")
 
@@ -42,10 +44,8 @@ with exclusion_form:
                             "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico ou de estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
 
     exclusion_checkboxes = [st.checkbox(x, key=x) for x in exclusion_criteria]
-    # st.write(exclusion_checkboxes)
     indices = [i for i, x in enumerate(exclusion_checkboxes) if x == True]
     selected_exclusion_criteria = [exclusion_criteria[i] for i in indices]
-    # st.write(sum(exclusion_checkboxes))
 
     excluded = st.form_submit_button("Excluir", help=None, kwargs=None)
 
@@ -58,19 +58,11 @@ with inclusion_form:
                        "Não foi possível avaliar"]
     
     inclusion_checkboxes = [st.checkbox(x, key=x) for x in inclusion_criteria]
-    # st.write(inclusion_checkboxes)
     indices = [i for i, x in enumerate(inclusion_checkboxes) if x == True]
     selected_inclusion_criteria = [inclusion_criteria[i] for i in indices]
-    # for i in indices:
-    #     st.write(inclusion_criteria[i])
-    # st.write(sum(inclusion_checkboxes))
 
     included = st.form_submit_button("Incluir", help=None, kwargs=None)
 
-
-# if sum(inclusion_checkboxes) > 0 and sum(exclusion_checkboxes) > 0:
-#     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
-#     st.error(error_message)
 
 with inclusion_form:
     if included:
@@ -79,12 +71,6 @@ with inclusion_form:
             st.error(inclusion_error_message)
             for key in st.session_state.keys():
                 del st.session_state[key]
-
-        # elif sum(inclusion_checkboxes) > 0 and sum(exclusion_checkboxes) > 0:
-        #     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
-        #     st.error(error_message)
-        #     for key in st.session_state.keys():
-        #         del st.session_state[key]
 
         else:
             doc_ref = main.firestore_client.collection("articles_first_review").document(current_user).collection("articles").document(current_article_pmid)
@@ -110,13 +96,6 @@ with exclusion_form:
             st.error(exclusion_error_message)
             for key in st.session_state.keys():
                 del st.session_state[key]
-
-
-        # elif sum(inclusion_checkboxes) > 0 and sum(exclusion_checkboxes) > 0:
-        #     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
-        #     st.error(error_message)
-        #     for key in st.session_state.keys():
-        #         del st.session_state[key]
 
         else:
             doc_ref = main.firestore_client.collection("articles_first_review").document(current_user).collection("articles").document(current_article_pmid)

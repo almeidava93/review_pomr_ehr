@@ -9,6 +9,9 @@ import pandas as pd
 
 import functions
 
+current_user = st.experimental_user.email
+# current_user = "almeida.va93@gmail.com"
+
 
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.load(database_keys)
@@ -27,7 +30,7 @@ def load_firestore_client(service_account_info = service_account_info):
 
 firestore_client = load_firestore_client() #Loads cached database connection
 
-current_user = st.experimental_user.email
+
 
 #Page rendering
 st.title("Dashboard de referências")
