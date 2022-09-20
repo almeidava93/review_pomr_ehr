@@ -14,11 +14,13 @@ import functions
 
 st.title("Passo 1: Revisão títulos e resumos")
 
-st.write(f"Você logou como: {functions.current_user}")
+current_user = st.experimental_user.email
+
+st.write(f"Você logou como: {current_user}")
 
 st.markdown("""***""")
 
-dashboard_data = main.get_dashboard_data(functions.current_user)
+dashboard_data = main.get_dashboard_data(current_user)
 not_reviewed_articles = dashboard_data[(dashboard_data['excluded']==0) & (dashboard_data["included"]==0)]
 current_article_pmid = not_reviewed_articles.iloc[0]['pubmed_id']
 
@@ -85,7 +87,7 @@ with inclusion_form:
         #         del st.session_state[key]
 
         else:
-            doc_ref = main.firestore_client.collection("articles_first_review").document(functions.current_user).collection("articles").document(current_article_pmid)
+            doc_ref = main.firestore_client.collection("articles_first_review").document(current_user).collection("articles").document(current_article_pmid)
             doc_ref.update(
                 {
                     "included": True,
@@ -117,7 +119,7 @@ with exclusion_form:
         #         del st.session_state[key]
 
         else:
-            doc_ref = main.firestore_client.collection("articles_first_review").document(functions.current_user).collection("articles").document(current_article_pmid)
+            doc_ref = main.firestore_client.collection("articles_first_review").document(current_user).collection("articles").document(current_article_pmid)
             doc_ref.update(
                 {
                     "included": False,
