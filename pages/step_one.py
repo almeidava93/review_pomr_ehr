@@ -14,7 +14,7 @@ import functions
 
 st.title("Passo 1: Revisão títulos e resumos")
 
-#st.write(f"Você logou como: {st.experimental_user.email}")
+st.write(f"Você logou como: {functions.current_user}")
 
 st.markdown("""***""")
 
