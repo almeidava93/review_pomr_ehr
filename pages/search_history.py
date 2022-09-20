@@ -8,11 +8,10 @@ import time
 #Custom imports
 import functions
 
+
 st.title("Histórico de revisões")
 
 current_user = st.experimental_user.email
-# current_user = "almeida.va93@gmail.com"
-
 
 #Get users already reviewed articles
 dashboard_data = functions.get_dashboard_data(current_user)
