@@ -241,11 +241,6 @@ def article_history_expander(article_data: pd.DataFrame, reviewed_article: pd.Da
     
   if undo_review_button:
     undo_review(article_data.at[0, 'pubmed_id'], current_user)
-    components.html("""
-    <script>
-      alert('The selected article went back to queue...')
-    </script>
-    """)
     st.experimental_rerun()
 
 
