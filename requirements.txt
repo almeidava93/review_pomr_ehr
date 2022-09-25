@@ -7,3 +7,4 @@ datetime
 spacy
 nbib
 streamlit-javascript
+sklearn
