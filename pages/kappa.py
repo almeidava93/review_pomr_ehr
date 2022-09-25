@@ -6,8 +6,7 @@ from google.cloud import firestore
 from sklearn.metrics import cohen_kappa_score
 from fleiss import fleissKappa
 
-
-#import functions
+import functions
 
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.load(database_keys)
@@ -52,6 +51,13 @@ def get_current_article_data(article_pmid):
     filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict, index=[0]) #Returns dataframe
     return filtered_collection_dataframe
 
+st.markdown("***")
+
+st.markdown("""
+### Coeficiente Kappa de Cohen
+##### Avaliação da concordância entre pares de avaliadores
+""")
+
 reviewer_pairs = list()
 for reviewer_1 in reviewers:
   for reviewer_2 in reviewers:
@@ -65,21 +71,40 @@ for reviewer_pair in reviewer_pairs:
   kappa_exclusion = cohen_kappa_score(list(reviewed_articles_df[f'{reviewer_1}_excluded']), list(reviewed_articles_df[f'{reviewer_2}_excluded']))
   cohen_kappa_results.append((reviewer_1, reviewer_2, kappa_inclusion, kappa_exclusion))
   st.write(f"""
-  Comparando {reviewer_1} com {reviewer_2}, temos os seguintes coeficientes kappa:
-  - Para inclusão de artigos: {kappa_inclusion}
-  - Para exclusão de artigos: {kappa_exclusion}
+  Comparando {reviewer_1} com {reviewer_2}:
+  - Para inclusão de artigos: {round(kappa_inclusion,3)}
+  - Para exclusão de artigos: {round(kappa_exclusion,3)}
   """)
+
+st.markdown("***")
 
 #Implement Fleiss kappa
 #https://github.com/Shamya/FleissKappa/blob/master/fleiss.py
 #https://www.statsmodels.org/dev/generated/statsmodels.stats.inter_rater.fleiss_kappa.html
+
+st.markdown("""
+### Coeficiente Kappa de Fleiss
+##### Avaliação da concordância entre grupos de três ou mais avaliadores
+""")
 reviewed_articles_df['excluded'] = reviewed_articles_df['almeida.va93@gmail.com_excluded'] + reviewed_articles_df['henrique.t.arai@gmail.com_excluded'] + reviewed_articles_df['mariela204@gmail.com_excluded']
 reviewed_articles_df['included'] = reviewed_articles_df['almeida.va93@gmail.com_included'] + reviewed_articles_df['henrique.t.arai@gmail.com_included'] + reviewed_articles_df['mariela204@gmail.com_included']
-print(reviewed_articles_df[['included','excluded']].info())
 
-kappa = fleissKappa(reviewed_articles_df[['included','excluded']].to_numpy(),3)
+fleiss_kappa = fleissKappa(reviewed_articles_df[['included','excluded']].to_numpy(),3)
+st.write("Fleiss kappa: " + str(round(fleiss_kappa,3)))
+
+st.markdown("***")
 
 #Calculating the proportion in which all raters agree
+st.markdown("""
+### Proporção de concordância
+""")
 total_agreement = len(reviewed_articles_df[['included','excluded']][(reviewed_articles_df['included']==3) | (reviewed_articles_df['excluded']==3)])
 proportion_agreement = total_agreement/len(reviewed_articles_df)
-st.write("The 3 raters agreement proportion: ", proportion_agreement)
+st.write("Proporção das avaliações que concordam totalmente: ", str(round(proportion_agreement*100,2)), "%")
+
+st.markdown("***")
+
+st.markdown("""
+### Interpretação do coeficiente kappa
+""")
+st.image("kappa_interpretation.png", use_column_width="always")
