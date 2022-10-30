@@ -20,8 +20,8 @@ import ast
 database_keys = open("pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 service_account_info = json.load(database_keys)
 
-current_user = st.experimental_user.email
-# current_user = 'almeida.va93@gmail.com'
+# current_user = st.experimental_user.email
+current_user = 'almeida.va93@gmail.com'
 
 #Connecting with the firestore database
 @st.cache(hash_funcs={firestore.Client: id}, ttl=None, show_spinner=True)
@@ -136,6 +136,22 @@ def get_dashboard_data(user):
   filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
   return filtered_collection_dataframe
 
+def get_dashboard_data_step_two():
+  query = firestore_client.collection("articles_second_review").document('undefined').collection("articles").get()
+  filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
+  filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
+  return filtered_collection_dataframe
+
+def update_undefined_articles(undefined_articles):
+    collection_ref = firestore_client.collection("articles_second_review").document('undefined').collection("articles")
+    query = collection_ref.get()
+    filtered_collection_dict = [doc.to_dict() for doc in query] #Returns list of dictionaries 
+    filtered_collection_dataframe = pd.DataFrame.from_records(filtered_collection_dict) #Returns dataframe
+
+    for article_id in undefined_articles.index:
+        if article_id not in filtered_collection_dataframe['pubmed_id']:
+            collection_ref.document(f'{article_id}').set({'included': False, 'excluded': False})
+            
 
 def card(article_data_series):
   all_authors = ""
@@ -242,6 +258,20 @@ def article_history_expander(article_data: pd.DataFrame, reviewed_article: pd.Da
   if undo_review_button:
     undo_review(article_data.at[0, 'pubmed_id'], current_user)
     st.experimental_rerun()
+
+def retrieve_fully_reviewed_articles():
+  reviewed_articles_dataframes = []
+  for reviewer in reviewers:
+    reviews_data = get_dashboard_data(reviewer)
+    reviewed_articles = reviews_data[(reviews_data['excluded']==1) | (reviews_data["included"]==1)]
+    reviewed_articles = reviewed_articles[['pubmed_id', 'excluded', 'included']]
+    reviewed_articles.columns = ['pubmed_id', f'{reviewer}_excluded', f'{reviewer}_included']
+    reviewed_articles.set_index('pubmed_id', inplace=True)
+    reviewed_articles_dataframes.append(reviewed_articles)
+
+  reviewed_articles_df = pd.concat(reviewed_articles_dataframes, axis=1, join='outer').dropna()
+  return reviewed_articles_df
+
 
 
 #STYLING

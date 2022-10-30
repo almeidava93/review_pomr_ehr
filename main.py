@@ -27,7 +27,8 @@ def load_firestore_client(service_account_info = service_account_info):
 
 firestore_client = load_firestore_client() #Loads cached database connection
 
-current_user = st.experimental_user.email
+# current_user = st.experimental_user.email
+current_user = 'almeida.va93@gmail.com'
 
 #Page rendering
 st.title("Dashboard de referências")
