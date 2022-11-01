@@ -3,6 +3,7 @@
 import streamlit as st
 import pandas as pd
 import time
+from tqdm import tqdm
 
 #Custom module
 import functions
@@ -18,31 +19,78 @@ included_articles = reviewed_articles_df['included'][reviewed_articles_df['inclu
 excluded_articles = reviewed_articles_df['excluded'][reviewed_articles_df['excluded']==3]
 undefined_articles = reviewed_articles_df[(reviewed_articles_df['excluded']!=3) & (reviewed_articles_df['included']!=3)]
 
-# consolidate_reviews = st.button('Consolidar artigos revisados no primeiro passo')
-# if consolidate_reviews:
-#     #for included articles:
-#     for article_id in included_articles.index:
-#         doc_ref = functions.firestore_client.collection("articles_second_review").document('included').collection('articles').document(f'{article_id}')
-#         if len(doc_ref.get) == 0:
-#             doc_ref.set({'pubmed_id': f'{article_id}'})
+#3) Set up a new collection of articles for step two. They will have the following structure: pubmed_id, included, excluded. Retrieve 
+#the articles that are already in that collection
+articles_df = functions.get_dashboard_data_step_two()
 
-#     ref = functions.firestore_client.collection("articles_second_review").document('included').collection('articles').get()
+if len(articles_df) > 0:
+    #A) add to the collection the included articles
+    for article_id in tqdm(included_articles.index):
+        if article_id not in articles_df["pubmed_id"].values:
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(f"{article_id}")
+            doc_ref.set({
+                "pubmed_id": article_id,
+                "included": True,
+                "excluded": False        
+            })
+
+    #B) add to the collection the excluded articles
+    for article_id in tqdm(excluded_articles.index):
+        if article_id not in articles_df["pubmed_id"].values:
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(f"{article_id}")
+            doc_ref.set({
+                "pubmed_id": article_id,
+                "included": False,
+                "excluded": True        
+            })
+
+    #C) add to the collection the undefined articles
+    for article_id in tqdm(undefined_articles.index):
+        if article_id not in articles_df["pubmed_id"].values:
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(f"{article_id}")
+            doc_ref.set({
+                "pubmed_id": article_id,
+                "included": False,
+                "excluded": False        
+            })
+
+else:
+    #A) add to the collection the included articles
+    for article_id in tqdm(included_articles.index):
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(f"{article_id}")
+            doc_ref.set({
+                "pubmed_id": article_id,
+                "included": True,
+                "excluded": False        
+            })
+
+    #B) add to the collection the excluded articles
+    for article_id in tqdm(excluded_articles.index):
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(f"{article_id}")
+            doc_ref.set({
+                "pubmed_id": article_id,
+                "included": False,
+                "excluded": True        
+            })
+
+    #C) add to the collection the undefined articles
+    for article_id in tqdm(undefined_articles.index):
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(f"{article_id}")
+            doc_ref.set({
+                "pubmed_id": article_id,
+                "included": False,
+                "excluded": False   
+            })
+
 
 #3) Evaluate disagreements and define final exclusion or inclusion
 
-
-
 st.title("Passo 2: Resolvendo discordâncias")
-
-
-update_undefined_articles = st.button('Atualizar artigos com discordância na revisão')
-if update_undefined_articles:
-    functions.update_undefined_articles(undefined_articles)
-
 st.markdown("""***""")
 
-current_article_pmid = undefined_articles.iloc[:,0].index[0]
-
+articles_df = functions.get_dashboard_data_step_two()
+pendent_articles = articles_df[(articles_df["included"]==False) & (articles_df["excluded"]==False)]
+current_article_pmid = pendent_articles["pubmed_id"].iloc[0]
 current_article_data = functions.get_current_article_data(current_article_pmid)
 
 try:
@@ -59,13 +107,9 @@ with exclusion_form:
     st.markdown("**Critérios de exclusão**")
     exclusion_criteria = ["Outra língua que não português ou inglês", 
                             "Não tem como objetivo estudar a aplicação de RCOP ou algum de seus componentes em um prontuário eletrônico ou de estudar o impacto de RCOP em um prontuário eletrônico para o paciente ou para o profissional"]
-
     exclusion_checkboxes = [st.checkbox(x, key=x) for x in exclusion_criteria]
-    # st.write(exclusion_checkboxes)
     indices = [i for i, x in enumerate(exclusion_checkboxes) if x == True]
     selected_exclusion_criteria = [exclusion_criteria[i] for i in indices]
-    # st.write(sum(exclusion_checkboxes))
-
     excluded = st.form_submit_button("Excluir", help=None, kwargs=None)
 
 inclusion_form = st.form("inclusion", clear_on_submit=True)
@@ -75,21 +119,11 @@ with inclusion_form:
                        "Estudo de impactos do uso do RCOP para o paciente", 
                        "Estudo de impactos do uso do RCOP para o profissional de saúde",
                        "Não foi possível avaliar"]
-    
     inclusion_checkboxes = [st.checkbox(x, key=x) for x in inclusion_criteria]
-    # st.write(inclusion_checkboxes)
     indices = [i for i, x in enumerate(inclusion_checkboxes) if x == True]
     selected_inclusion_criteria = [inclusion_criteria[i] for i in indices]
-    # for i in indices:
-    #     st.write(inclusion_criteria[i])
-    # st.write(sum(inclusion_checkboxes))
-
     included = st.form_submit_button("Incluir", help=None, kwargs=None)
 
-
-# if sum(inclusion_checkboxes) > 0 and sum(exclusion_checkboxes) > 0:
-#     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
-#     st.error(error_message)
 
 with inclusion_form:
     if included:
@@ -99,23 +133,17 @@ with inclusion_form:
             for key in st.session_state.keys():
                 del st.session_state[key]
 
-        # elif sum(inclusion_checkboxes) > 0 and sum(exclusion_checkboxes) > 0:
-        #     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
-        #     st.error(error_message)
-        #     for key in st.session_state.keys():
-        #         del st.session_state[key]
-
         else:
-            doc_ref = functions.firestore_client.collection("articles_second_review").document('included').collection("articles").document(current_article_pmid)
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(current_article_pmid)
             doc_ref.set(
                 {
                     "included": True,
                     "excluded": False,
                     "inclusion_criteria": selected_inclusion_criteria,
-                    "timestamp": time.time()
+                    "timestamp": time.time(),
+                    "pubmed_id": current_article_pmid
                 }
             )
-            functions.firestore_client.collection("articles_second_review").document('undefined').collection("articles").document(current_article_pmid).delete()
             st.success("O artigo foi **incluído** com sucesso na revisão.")
             for key in st.session_state.keys():
                 del st.session_state[key]
@@ -131,25 +159,17 @@ with exclusion_form:
             for key in st.session_state.keys():
                 del st.session_state[key]
 
-
-        # elif sum(inclusion_checkboxes) > 0 and sum(exclusion_checkboxes) > 0:
-        #     error_message = "Um mesmo artigo não pode ter selecionados critérios de inclusão e de exclusão."
-        #     st.error(error_message)
-        #     for key in st.session_state.keys():
-        #         del st.session_state[key]
-
         else:
-            doc_ref = functions.firestore_client.collection("articles_second_review").document('excluded').collection("articles").document(current_article_pmid)
+            doc_ref = functions.firestore_client.collection("articles_second_review").document(current_article_pmid)
             doc_ref.set(
                 {
                     "included": False,
                     "excluded": True,
                     "exclusion_criteria": selected_exclusion_criteria,
-                    "timestamp": time.time()
+                    "timestamp": time.time(),
+                    "pubmed_id": current_article_pmid
                 }
             )
-            functions.firestore_client.collection("articles_second_review").document('undefined').collection("articles").document(current_article_pmid).delete()
-
             st.success("O artigo foi **excluído** com sucesso da revisão.")
             for key in st.session_state.keys():
                 del st.session_state[key]
