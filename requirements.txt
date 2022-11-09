@@ -8,3 +8,4 @@ spacy
 nbib
 streamlit-javascript
 sklearn
+scikit-learn
