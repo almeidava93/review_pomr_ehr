@@ -2,6 +2,7 @@
 #Firestore database documentation: https://googleapis.dev/python/firestore/latest/index.html
 
 
+from cmath import nan
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -168,6 +169,42 @@ def card(article_data_series):
   </div>
   """
 
+def card_full_text(article_data_series):
+  all_authors = ""
+  try:
+    for author in ast.literal_eval(article_data_series.at[0, 'authors']):
+        all_authors += author['author'] + "; "
+  except:
+    pass
+  
+  if str(article_data_series.at[0,'abstract']) != 'nan':
+    abstract = str(article_data_series.at[0,'abstract'])
+  else:
+    abstract = """<i>No abstract available...</i>
+  <br>
+  <br>"""
+
+
+  full_text_source = ""
+  if article_data_series.at[0, 'doi'] != 'nan':
+    full_text_source = f"""<a href="https://sci-hub.se/{article_data_series.at[0, 'doi']}/", class="card-link">Ver no SciHub</a>"""
+  else:
+    full_text_source = f"""<br><a>Sem link para texto completo no SciHub</a>"""
+
+
+  return f"""
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><b>{article_data_series.at[0, 'title']}</b></h5>
+      <h6 class="card-subtitle mb-2 text-muted">{all_authors}</h6>
+      <p class="card-text">{abstract}</p>
+      <h6 class="card-subtitle mb-2 text-muted">Language: {article_data_series.at[0, 'language']}</h6>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/{article_data_series.at[0, 'pubmed_id']}/", class="card-link">Ver no Pubmed</a>
+      {full_text_source}
+    </div>
+  </div>
+  """
 
 def review_history_card(article_data_series):
   all_authors = ""
