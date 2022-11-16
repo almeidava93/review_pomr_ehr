@@ -207,9 +207,7 @@ if included:
 st.markdown("***")
 
 a,b = st.columns([1,1])
-with a: save = st.button("Salvar")
-if save:
-    
+with a: save = st.button("Salvar")   
 
 with b: next = st.button("Concluir revisão e ir para o próximo artigo")
 
