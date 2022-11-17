@@ -194,7 +194,8 @@ def format_func(x):
     elif x==False: return "Excluir"
     else: return None
 
-with st.form(key="article_data_form"):
+form = st.form(key="article_data_form")
+with form:
     included = st.radio("Incluir ou excluir?", [True, False], index=0, format_func=format_func, horizontal=True, label_visibility="visible")
 
     if included:
@@ -225,7 +226,7 @@ with st.form(key="article_data_form"):
 st.markdown("***")
 
 a,b = st.columns([1,1])
-with a: save = st.button("Salvar")   
+with a: save = form.form_submit_button("Salvar")   
 if save:
     if article_review_data["included"] == True:
         article_review_data["objective"] = objective
@@ -240,7 +241,7 @@ if save:
         merge=True
     )    
 
-with b: next = st.button("Concluir revisão e ir para o próximo artigo")
+with b: next = form.form_submit_button("Concluir revisão e ir para o próximo artigo")
 if next:
     if article_review_data["included"] == True:
         article_review_data["objective"] = objective
