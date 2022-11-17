@@ -105,7 +105,6 @@ update_database_2()
 
 #4) Get all included articles from articles_second_review, check if it is already present in articles_third_review
 #   and, if not, add to articles_third_review to be reevaluated
-@st.cache(ttl = 1800)
 def update_database_3():
     query_ref_2 = functions.firestore_client.collection("articles_second_review").where("included", "==", True)
     query = query_ref_2.get()
