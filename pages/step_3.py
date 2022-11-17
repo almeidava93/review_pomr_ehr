@@ -168,7 +168,7 @@ doc_ref = functions.firestore_client.collection("articles_third_review")
 query = doc_ref.get()
 data = [doc.to_dict() for doc in query]
 df = pd.DataFrame.from_records(data)
-current_article_pmid = df[(df["reviewer"] == current_user) & (df["concluded"]==False)]["pubmed_id"][1]
+current_article_pmid = df[(df["reviewer"] == current_user) & (df["concluded"]==False)]["pubmed_id"].iloc[0]
 current_article_data = functions.get_current_article_data(current_article_pmid)
 
 try:
