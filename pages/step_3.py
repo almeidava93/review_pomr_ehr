@@ -184,6 +184,7 @@ def format_func(x):
 included = st.radio("Incluir ou excluir?", [True, False], index=0, format_func=format_func, horizontal=True, label_visibility="visible")
 
 if included:
+    article_review_data["included"] = True
     tags = st.multiselect("Quais as características deste estudo? Selecione todas as que se aplicam",
         options=["estudo epidemiologico",
             "lista de problemas",
@@ -200,6 +201,10 @@ if included:
     methods = st.text_input("Métodos", value=article_review_data["methods"])
     results = st.text_area("Principais resultados", value=article_review_data["results"])
     limitations = st.text_area("Limitações", value=article_review_data["limitations"])
+
+elif included==False:
+    article_review_data["included"] = False
+
 
 st.markdown("***")
 
