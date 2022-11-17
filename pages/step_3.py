@@ -194,31 +194,32 @@ def format_func(x):
     elif x==False: return "Excluir"
     else: return None
 
-included = st.radio("Incluir ou excluir?", [True, False], index=0, format_func=format_func, horizontal=True, label_visibility="visible")
+with st.form():
+    included = st.radio("Incluir ou excluir?", [True, False], index=0, format_func=format_func, horizontal=True, label_visibility="visible")
 
-if included:
-    article_review_data["included"] = True
-    article_review_data["excluded"] = False
-    tags = st.multiselect("Quais as características deste estudo? Selecione todas as que se aplicam",
-        options=["estudo epidemiologico",
-            "lista de problemas",
-            "episodio de cuidado",
-            "SOAP e outros modelos",
-            "CID",
-            "CIAP",
-            "outras classificacoes internacionais",
-            "elaboracao de prontuario eletronico"
-        ],
-        default=article_review_data["tags"]
-    )
-    objective = st.text_input("Objetivo", value=article_review_data["objective"])
-    methods = st.text_input("Métodos", value=article_review_data["methods"])
-    results = st.text_area("Principais resultados", value=article_review_data["results"])
-    limitations = st.text_area("Limitações", value=article_review_data["limitations"])
+    if included:
+        article_review_data["included"] = True
+        article_review_data["excluded"] = False
+        tags = st.multiselect("Quais as características deste estudo? Selecione todas as que se aplicam",
+            options=["estudo epidemiologico",
+                "lista de problemas",
+                "episodio de cuidado",
+                "SOAP e outros modelos",
+                "CID",
+                "CIAP",
+                "outras classificacoes internacionais",
+                "elaboracao de prontuario eletronico"
+            ],
+            default=article_review_data["tags"]
+        )
+        objective = st.text_input("Objetivo", value=article_review_data["objective"])
+        methods = st.text_input("Métodos", value=article_review_data["methods"])
+        results = st.text_area("Principais resultados", value=article_review_data["results"])
+        limitations = st.text_area("Limitações", value=article_review_data["limitations"])
 
-elif included==False:
-    article_review_data["included"] = False
-    article_review_data["excluded"] = True
+    elif included==False:
+        article_review_data["included"] = False
+        article_review_data["excluded"] = True
 
 
 st.markdown("***")
