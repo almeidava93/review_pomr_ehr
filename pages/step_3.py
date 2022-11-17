@@ -241,5 +241,19 @@ if save:
     )    
 
 with b: next = st.button("Concluir revisão e ir para o próximo artigo")
+if next:
+    if article_review_data["included"] == True:
+        article_review_data["objective"] = objective
+        article_review_data["methods"] = methods
+        article_review_data["results"] = results
+        article_review_data["limitations"] = limitations
+        article_review_data["tags"] = tags
+        article_review_data["concluded"] = True
+    
+    doc_ref = functions.firestore_client.collection("articles_third_review")
+    doc_ref.document(current_article_pmid).set(
+        article_review_data,
+        merge=True
+    )    
 
 functions.local_css()
