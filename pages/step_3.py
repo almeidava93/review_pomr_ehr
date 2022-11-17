@@ -250,7 +250,8 @@ with form:
             article_review_data["results"] = results
             article_review_data["limitations"] = limitations
             article_review_data["tags"] = tags
-            article_review_data["concluded"] = True
+        
+        article_review_data["concluded"] = True
         
         doc_ref = functions.firestore_client.collection("articles_third_review")
         doc_ref.document(current_article_pmid).set(
