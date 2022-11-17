@@ -5,9 +5,6 @@ from tqdm import tqdm
 import random 
 import pdb
 
-import sys
-sys.path.append("C:/Users/User/OneDrive/Documentos/GitHub/review_pomr_ehr")
-sys.path.append("C:/Users/User/OneDrive/Documentos/GitHub/review_pomr_ehr/pomr-systematic-review-firebase-adminsdk-g6klq-e4f60f5466.json")
 
 #Custom module
 import functions
@@ -139,8 +136,8 @@ elif len(functions.firestore_client.collection("articles_third_review").get()) >
 st.title("Passo 3: Lendo artigos completos")
 st.markdown("""***""")
 
-# current_user = st.experimental_user.email
-current_user = "almeida.va93@gmail.com"
+current_user = st.experimental_user.email
+#current_user = "almeida.va93@gmail.com"
 
 
 review_info = f"""
@@ -208,6 +205,18 @@ st.markdown("***")
 
 a,b = st.columns([1,1])
 with a: save = st.button("Salvar")   
+if save:
+    article_review_data["objective"] = objective
+    article_review_data["methods"] = methods
+    article_review_data["results"] = results
+    article_review_data["limitations"] = limitations
+    article_review_data["tags"] = tags
+    
+    doc_ref = functions.firestore_client.collection("articles_third_review")
+    doc_ref.document(current_article_pmid).set(
+        article_review_data,
+        merge=True
+    )    
 
 with b: next = st.button("Concluir revisão e ir para o próximo artigo")
 
