@@ -194,7 +194,7 @@ def format_func(x):
     elif x==False: return "Excluir"
     else: return None
 
-with st.form():
+with st.form(ket="article_data_form"):
     included = st.radio("Incluir ou excluir?", [True, False], index=0, format_func=format_func, horizontal=True, label_visibility="visible")
 
     if included:
