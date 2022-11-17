@@ -211,11 +211,12 @@ st.markdown("***")
 a,b = st.columns([1,1])
 with a: save = st.button("Salvar")   
 if save:
-    article_review_data["objective"] = objective
-    article_review_data["methods"] = methods
-    article_review_data["results"] = results
-    article_review_data["limitations"] = limitations
-    article_review_data["tags"] = tags
+    if article_review_data["included"] == True:
+        article_review_data["objective"] = objective
+        article_review_data["methods"] = methods
+        article_review_data["results"] = results
+        article_review_data["limitations"] = limitations
+        article_review_data["tags"] = tags
     
     doc_ref = functions.firestore_client.collection("articles_third_review")
     doc_ref.document(current_article_pmid).set(
