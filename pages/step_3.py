@@ -227,7 +227,7 @@ st.markdown("***")
 
 with form:
     a,b = st.columns([1,1])
-    with a: save = form.form_submit_button("Salvar")   
+    save = form.form_submit_button("Salvar")   
     if save:
         if article_review_data["included"] == True:
             article_review_data["objective"] = objective
@@ -242,7 +242,7 @@ with form:
             merge=True
         )    
 
-    with b: next = form.form_submit_button("Concluir revisão e ir para o próximo artigo")
+    next = form.form_submit_button("Concluir revisão e ir para o próximo artigo")
     if next:
         if article_review_data["included"] == True:
             article_review_data["objective"] = objective
