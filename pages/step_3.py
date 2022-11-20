@@ -210,12 +210,13 @@ with form:
                 "CID",
                 "CIAP",
                 "outras classificacoes internacionais",
-                "elaboracao de prontuario eletronico"
+                "elaboracao de prontuario eletronico",
+                "minimum basic data set"
             ],
             default=article_review_data["tags"]
         )
-        objective = st.text_input("Objetivo", value=article_review_data["objective"])
-        methods = st.text_input("Métodos", value=article_review_data["methods"])
+        objective = st.text_area("Objetivo", value=article_review_data["objective"])
+        methods = st.text_area("Métodos", value=article_review_data["methods"])
         results = st.text_area("Principais resultados", value=article_review_data["results"])
         limitations = st.text_area("Limitações", value=article_review_data["limitations"])
 
