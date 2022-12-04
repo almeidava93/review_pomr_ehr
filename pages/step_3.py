@@ -153,20 +153,20 @@ st.markdown("""***""")
 current_user = "almeida.va93@gmail.com"
 
 
-review_info = f"""
-- mariela204@gmail.com: {df1["reviewer"].value_counts()["mariela204@gmail.com"]} artigos
---> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
---> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
-- henrique.t.arai@gmail.com: {df1["reviewer"].value_counts()["henrique.t.arai@gmail.com"]} artigos
---> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
---> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
-- almeida.va93@gmail.com: {df1["reviewer"].value_counts()["almeida.va93@gmail.com"]} artigos
---> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
---> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
-"""
+# review_info = f"""
+# - mariela204@gmail.com: {df1["reviewer"].value_counts()["mariela204@gmail.com"]} artigos
+# --> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
+# --> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[False]}
+# - henrique.t.arai@gmail.com: {df1["reviewer"].value_counts()["henrique.t.arai@gmail.com"]} artigos
+# --> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
+# --> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[False]}
+# - almeida.va93@gmail.com: {df1["reviewer"].value_counts()["almeida.va93@gmail.com"]} artigos
+# --> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
+# --> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[False]}
+# """
 
-with st.sidebar:
-    st.markdown(review_info, unsafe_allow_html=True)
+# with st.sidebar:
+#     st.markdown(review_info, unsafe_allow_html=True)
 
 for reviewer in functions.reviewers:
     review_info = f""""
