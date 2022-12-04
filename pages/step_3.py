@@ -173,8 +173,8 @@ for reviewer in functions.reviewers:
     pendent = df1[df1['reviewer']==reviewer]['concluded'].value_counts()[False]
     
     review_info = f"""{reviewer}: {total} artigos
-<br><ul> concluídos: {total - pendent}</ul>
-<br><ul> pendentes: {pendent}</ul>
+<ul><li>concluídos: {total - pendent}</li>
+<li>pendentes: {pendent}</li></ul>
 """
     with st.sidebar:
         st.markdown(review_info, unsafe_allow_html=True)
