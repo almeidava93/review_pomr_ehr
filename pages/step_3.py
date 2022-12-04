@@ -169,10 +169,12 @@ current_user = "almeida.va93@gmail.com"
 #     st.markdown(review_info, unsafe_allow_html=True)
 
 for reviewer in functions.reviewers:
-    review_info = f""""
-- {reviewer}: {df1["reviewer"].value_counts()[reviewer]} artigos
---> concluídos: {df1[df1['reviewer']==reviewer]['concluded'].value_counts()[True]}
---> pendentes: {df1[df1['reviewer']==reviewer]['concluded'].value_counts()[True]}
+    total = df1["reviewer"].value_counts()[reviewer]
+    pendent = df1[df1['reviewer']==reviewer]['concluded'].value_counts()[False]
+    
+    review_info = f"""{reviewer}: {total} artigos
+--> concluídos: {total - pendent}
+--> pendentes: {pendent}
 """
     with st.sidebar:
         st.markdown(review_info, unsafe_allow_html=True)
