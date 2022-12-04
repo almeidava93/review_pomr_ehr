@@ -260,5 +260,6 @@ with form:
             article_review_data,
             merge=True
         )    
+        st.experimental_rerun()
 
 functions.local_css()
