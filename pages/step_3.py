@@ -149,20 +149,33 @@ df1 = update_database_3()
 st.title("Passo 3: Lendo artigos completos")
 st.markdown("""***""")
 
-current_user = st.experimental_user.email
-#current_user = "almeida.va93@gmail.com"
+#current_user = st.experimental_user.email
+current_user = "almeida.va93@gmail.com"
 
 
 review_info = f"""
 - mariela204@gmail.com: {df1["reviewer"].value_counts()["mariela204@gmail.com"]} artigos
+--> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
+--> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
 - henrique.t.arai@gmail.com: {df1["reviewer"].value_counts()["henrique.t.arai@gmail.com"]} artigos
+--> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
+--> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
 - almeida.va93@gmail.com: {df1["reviewer"].value_counts()["almeida.va93@gmail.com"]} artigos
+--> concluídos: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
+--> pendentes: {df1[df1['reviewer']=='almeida.va93@gmail.com']['concluded'].value_counts()[True]}
 """
-
 
 with st.sidebar:
     st.markdown(review_info, unsafe_allow_html=True)
 
+for reviewer in functions.reviewers:
+    review_info = f""""
+- {reviewer}: {df1["reviewer"].value_counts()[reviewer]} artigos
+--> concluídos: {df1[df1['reviewer']==reviewer]['concluded'].value_counts()[True]}
+--> pendentes: {df1[df1['reviewer']==reviewer]['concluded'].value_counts()[True]}
+"""
+    with st.sidebar:
+        st.markdown(review_info, unsafe_allow_html=True)
 
 doc_ref = functions.firestore_client.collection("articles_third_review")
 query = doc_ref.get()
