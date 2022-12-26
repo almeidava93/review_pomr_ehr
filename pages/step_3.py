@@ -213,15 +213,6 @@ included = st.radio("Incluir ou excluir?", [True, False], index=1, format_func=f
 
 form = st.form(key="article_data_form", clear_on_submit=False)
 
-if 'tags' not in st.session_state: st.session_state['tags'] = ""
-if 'objective' not in st.session_state: st.session_state['objective'] = ""
-if 'methods' not in st.session_state: st.session_state['methods'] = ""
-if 'results' not in st.session_state: st.session_state['results'] = ""
-if 'limitations' not in st.session_state: st.session_state['limitations'] = ""
-
-
-
-
 with form:
     if included:
         article_review_data["included"] = True
