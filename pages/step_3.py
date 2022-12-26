@@ -226,15 +226,14 @@ with form:
                 "CIAP",
                 "outras classificacoes internacionais",
                 "elaboracao de prontuario eletronico",
-                "minimum basic data set",
-                "modelo conceitual orientado por problemas"
+                "minimum basic data set"
             ],
             default=article_review_data["tags"]
         )
-        objective = st.text_area("Objetivo", value=article_review_data["objective"], key="objective")
-        methods = st.text_area("Métodos", value=article_review_data["methods"], key="methods")
-        results = st.text_area("Principais resultados", value=article_review_data["results"], key="results")
-        limitations = st.text_area("Limitações", value=article_review_data["limitations"], key="limitations")
+        objective = st.text_area("Objetivo", value=article_review_data["objective"])
+        methods = st.text_area("Métodos", value=article_review_data["methods"])
+        results = st.text_area("Principais resultados", value=article_review_data["results"])
+        limitations = st.text_area("Limitações", value=article_review_data["limitations"])
 
     elif included==False:
         article_review_data["included"] = False
@@ -276,13 +275,6 @@ with form:
             article_review_data,
             merge=True
         )    
-
-        #clear inputs
-        st.session_state["objetive"] = ""
-        st.session_state["methods"] = ""
-        st.session_state["results"] = ""
-        st.session_state["limitations"] = ""
-
         st.experimental_rerun()
 
 functions.local_css()
