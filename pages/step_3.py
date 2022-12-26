@@ -217,7 +217,7 @@ with form:
     if included:
         article_review_data["included"] = True
         article_review_data["excluded"] = False
-        tags = st.multiselect("Quais as características deste estudo? Selecione todas as que se aplicam",
+        st.multiselect("Quais as características deste estudo? Selecione todas as que se aplicam",
             options=["estudo epidemiologico",
                 "lista de problemas",
                 "episodio de cuidado",
@@ -232,10 +232,10 @@ with form:
             default=article_review_data["tags"],
             key="tags"
         )
-        objective = st.text_area("Objetivo", value=article_review_data["objective"], key="objective")
-        methods = st.text_area("Métodos", value=article_review_data["methods"], key="methods")
-        results = st.text_area("Principais resultados", value=article_review_data["results"], key="results")
-        limitations = st.text_area("Limitações", value=article_review_data["limitations"], key="limitations")
+        st.text_area("Objetivo", value=article_review_data["objective"], key="objective")
+        st.text_area("Métodos", value=article_review_data["methods"], key="methods")
+        st.text_area("Principais resultados", value=article_review_data["results"], key="results")
+        st.text_area("Limitações", value=article_review_data["limitations"], key="limitations")
 
     elif included==False:
         article_review_data["included"] = False
@@ -249,11 +249,11 @@ with form:
     save = form.form_submit_button("Salvar")   
     if save:
         if article_review_data["included"] == True:
-            article_review_data["objective"] = objective
-            article_review_data["methods"] = methods
-            article_review_data["results"] = results
-            article_review_data["limitations"] = limitations
-            article_review_data["tags"] = tags
+            article_review_data["objective"] = st.session_state["objetive"]
+            article_review_data["methods"] = st.session_state["methods"]
+            article_review_data["results"] = st.session_state["results"]
+            article_review_data["limitations"] = st.session_state["limitations"]
+            article_review_data["tags"] = st.session_state["tags"]
         
         doc_ref = functions.firestore_client.collection("articles_third_review")
         doc_ref.document(current_article_pmid).set(
@@ -264,11 +264,11 @@ with form:
     next = form.form_submit_button("Concluir revisão e ir para o próximo artigo")
     if next:
         if article_review_data["included"] == True:
-            article_review_data["objective"] = objective
-            article_review_data["methods"] = methods
-            article_review_data["results"] = results
-            article_review_data["limitations"] = limitations
-            article_review_data["tags"] = tags
+            article_review_data["objective"] = st.session_state["objetive"]
+            article_review_data["methods"] = st.session_state["methods"]
+            article_review_data["results"] = st.session_state["results"]
+            article_review_data["limitations"] = st.session_state["limitations"]
+            article_review_data["tags"] = st.session_state["tags"]
         
         article_review_data["concluded"] = True
         
