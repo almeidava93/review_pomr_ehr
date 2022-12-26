@@ -273,7 +273,7 @@ with form:
     next = form.form_submit_button("Concluir revisão e ir para o próximo artigo")
     if next:
         if article_review_data["included"] == True:
-            article_review_data["objective"] = st.session_state["objetive"]
+            article_review_data["objective"] = st.session_state["objective"]
             article_review_data["methods"] = st.session_state["methods"]
             article_review_data["results"] = st.session_state["results"]
             article_review_data["limitations"] = st.session_state["limitations"]
@@ -288,7 +288,7 @@ with form:
         )    
 
         #clear inputs
-        st.session_state["objetive"] = ""
+        st.session_state["objective"] = ""
         st.session_state["methods"] = ""
         st.session_state["results"] = ""
         st.session_state["limitations"] = ""
