@@ -229,7 +229,8 @@ with form:
                 "minimum basic data set",
                 "modelo conceitual orientado por problemas"
             ],
-            default=article_review_data["tags"]
+            default=article_review_data["tags"],
+            key="tags"
         )
         objective = st.text_area("Objetivo", value=article_review_data["objective"], key="objective")
         methods = st.text_area("Métodos", value=article_review_data["methods"], key="methods")
@@ -282,6 +283,7 @@ with form:
         st.session_state["methods"] = ""
         st.session_state["results"] = ""
         st.session_state["limitations"] = ""
+        st.session_state["tags"] = ""
 
         st.experimental_rerun()
 
